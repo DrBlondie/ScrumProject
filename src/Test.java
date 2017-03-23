@@ -1,8 +1,8 @@
 
 public class Test {
     public static void main(String[] args){
-        System.out.println("Test");
-        System.out.println("Updating GitHub");
+        GUI gui = new GUI();
+        gui.setVisible(true);
     }
 
 }
