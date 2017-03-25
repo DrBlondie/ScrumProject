@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,11 +40,11 @@ public class GUI extends JFrame {
         c.insets = new Insets(0, 0, 0, 0);
         Tile[][] tiles = Main.board.getBoard();
         for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 450; x += 50) {
+            for (int x = 0; x < 9; x ++) {
 
-                c.gridx = x;
+                c.gridx = x * 90;
                 c.gridy = y;
-                playField.add(tiles[x / 90][y].getTextField(), c);
+                playField.add(tiles[x][y].getTextField(), c);
             }
         }
     }
