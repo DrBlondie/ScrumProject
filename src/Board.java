@@ -1,3 +1,8 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public class Board {
 
     private Tile[][] board;
@@ -9,24 +14,40 @@ public class Board {
 
         board = new Tile[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
 
-        for (int i = 1; i < NUMBER_OF_ROWS - 1; i++) {
-            for (int j = 1; j < NUMBER_OF_COLUMNS - 1; j++) {
-                board[i][j] = new Tile();
+        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+            for (int j = 0; j < NUMBER_OF_COLUMNS ; j++) {
+                JTextField t = Main.getNewTextField();
+                t.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
+                        t.setBackground(Color.red);
+                    }
+                });
+                board[i][j] = new Tile(i,j,t);
+                if(i == 0 || i == 8 || j == 0 || j == 8){
+                    board[i][j].setNumber(-1);
+                }
             }
         }
 
+
+    }
+
+    public Tile[][] getBoard(){
+        return board;
     }
 
     public String performMove(Tile placedTile) {
 
         int score = 0;
 
-        if (isCornerSpace( int row, int column)){
+        /**if (isCornerSpace( int row, int column)){
             score = calculateCornerPoints();
+         }
+        **/
 
-        }
-
-        return "The value of the surrounding tiles modulo the queue tile value is:" + sum;
+        return "The value of the surrounding tiles modulo the queue tile value is:" + 0;
     }
 
     /*
@@ -53,30 +74,31 @@ public class Board {
      */
     public int calculateCornerPoints() {
         int sum = 0;
-        if (isCornerSpace().equals("TOP_LEFT")) {
+        if (isCornerSpace(0,0).equals("TOP_LEFT")) {
             sum += board[0][1].getNumber();
             sum += board[1][1].getNumber();
             sum += board[1][0].getNumber();
             return sum % 10;
         }
-        if (isCornerSpace().equals("BOTTOM_RIGHT")) {
+        if (isCornerSpace(0,0).equals("BOTTOM_RIGHT")) {
             sum += board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1].getNumber();
             sum += board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].getNumber();
             sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].getNumber();
             return sum % 10;
         }
-        if (isCornerSpace().equals("BOTTOM_LEFT")) {
+        if (isCornerSpace(0,0).equals("BOTTOM_LEFT")) {
             sum += board[NUMBER_OF_ROWS - 1][0].getNumber();
             sum += board[NUMBER_OF_ROWS - 2][0].getNumber();
             sum += board[NUMBER_OF_ROWS - 1][1].getNumber();
             return sum % 10;
         }
-        if (isCornerSpace().equals("TOP_RIGHT")) {
+        if (isCornerSpace(0,0).equals("TOP_RIGHT")) {
             sum += board[0][NUMBER_OF_COLUMNS - 1].getNumber();
             sum += board[0][NUMBER_OF_COLUMNS - 2].getNumber();
             sum += board[1][NUMBER_OF_COLUMNS - 1].getNumber();
             return sum % 10;
         }
+        return sum;
     }
 }
 

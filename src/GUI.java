@@ -1,66 +1,70 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class GUI extends JFrame
-{
+public class GUI extends JFrame {
     protected TimerThread timerThread;
-    private JPanel mainPanel = new JPanel();
-    private Rectangle2D[][] boxes = new Rectangle2D[9][9];
-    private ArrayList<Shape> guideLines = new ArrayList<>();
+    private JPanel playField = new JPanel();
+    private JPanel queueBox = new JPanel();
 
-    public GUI(){
+
+    public GUI() {
         setTitle("Sum Fun");
-        add(mainPanel, BorderLayout.NORTH);
-        setSize(765, 500);
-        setMinimumSize(new Dimension(765, 350));
+        setSize(800, 600);
+        setMinimumSize(new Dimension(800, 600));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        buildPlayField();
+        buildQueueBox();
 
-        JPanel gameBoard = new JPanel(new GridBagLayout());
+        JPanel header = new JPanel();
+        JLabel label = new JLabel("Sum Fun");
+
+        label.setFont(new Font("SansSerif", Font.BOLD, 20));
+        header.add(label);
+
+        add(header, BorderLayout.NORTH);
+        add(playField, BorderLayout.CENTER);
+        add(queueBox, BorderLayout.EAST);
+    }
+
+    public void buildPlayField() {
+        playField.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.NONE;
         c.gridy = 0;
-        c.gridheight = 1;
-
         c.gridx = 0;
-        c.gridwidth = 2;
-        setBoxes();
-        setLines();
-        repaint();
-    }
+        c.gridwidth = 50;
+        c.insets = new Insets(0, 0, 0, 0);
+        Tile[][] tiles = Main.board.getBoard();
+        for (int y = 0; y < 9; y++) {
+            for (int x = 0; x < 450; x += 50) {
 
-    public void paintComponent(Graphics g) {
-        super.paintComponents(g);
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.black);
-        for (Rectangle2D[] a : boxes) {
-            for (Rectangle2D q : a) {
-                g2.draw(q);
+                c.gridx = x;
+                c.gridy = y;
+                playField.add(tiles[x / 90][y].getTextField(), c);
             }
         }
-        for (Shape el : guideLines) {
-            g2.draw(el);
-        }
-
     }
 
-    public void setBoxes() {
-        for (int x = 0; x < 800; x += 100) {
-            for (int i = 0; i < 800; i += 100) {
-                boxes[x / 100][i / 100] = new Rectangle2D.Double(i, x, 100, 100);
-            }
-        }
+    public void buildQueueBox(){
 
-    }
-    public void setLines() {
-        for (int i = 0; i < 800; i += 100) {
-            guideLines.add(new Line2D.Double(i, 0, i, 800));
-            guideLines.add(new Line2D.Double(0, i, 800, i));
+        queueBox.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.NONE;
+        c.gridy = 0;
+        c.gridx = 0;
+        c.gridwidth = 50;
+        c.insets = new Insets(0, 0, 0, 0);
+        ArrayList<Tile> queue = Main.queue.getQueue();
+        for (int i = 0; i < queue.size(); i ++) {
+            Tile tile = queue.get(i);
+            c.gridy = i;
+            queueBox.add(tile.getTextField(), c);
         }
     }
 

@@ -1,9 +1,8 @@
-import java.util.*;
-import Tile;
+import java.util.ArrayList;
 
-public class TileQueue{
+public class TileQueue {
 
-    private static ArrayList<Integer> queue = new ArrayList<>();
+    private static ArrayList<Tile> queue = new ArrayList<>();
     private final int MAX_SIZE = 5;
     private int head;
     private int tail;
@@ -12,7 +11,7 @@ public class TileQueue{
     public TileQueue(){
 
         for(int i = 0; i < MAX_SIZE; i++){
-            queue.add(new Tile());
+            queue.add(new Tile(-1,-1,Main.getNewTextField()));
         }
 
         head = 0;
@@ -23,10 +22,10 @@ public class TileQueue{
 
     private Tile dequeue(){
 
-        if(size > 0){
+        if(queue.size() > 0){
             placedTiles++;
             Tile nextTile = queue.get(head);
-            nextTile.remove(head);
+            queue.remove(head);
             return nextTile;
         }
         throw new Error("There are not sufficent Tiles in the queue");
@@ -34,10 +33,10 @@ public class TileQueue{
     }
 
     private void enqueue(){
-        queue.add(new Tile());
+        queue.add(new Tile(-1,-1, Main.getNewTextField()));
     }
 
-    public void getQueue(){
+    public ArrayList<Tile> getQueue(){
         return queue;
     }
 
