@@ -20,19 +20,34 @@ public class GUI extends JFrame {
         buildPlayField();
         buildQueueBox();
 
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.NONE;
+        c.gridy = 0;
+        c.gridx = 0;
+
         JPanel header = new JPanel();
+        header.setLayout( new GridLayout(1,3));
+        header.add(new JLabel(" "));
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        header.add(label, BorderLayout.CENTER);
         JLabel timer = new JLabel();
-        header.add(timer, BorderLayout.EAST);
-        add(header, BorderLayout.NORTH);
+        timer.setFont(new Font("SansSerif", Font.BOLD, 20));
+
+
+        header.add(label);
+        header.add(timer);
+
+        add(header, BorderLayout.PAGE_START);
 
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
-        boardPanel.add(playField);
-        boardPanel.add(queueBox);
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.insets = new Insets(0, 0, 0, 50);
+        boardPanel.add(playField,c);
+        c.gridx = 1;
+        boardPanel.add(queueBox,c);
         add(boardPanel,BorderLayout.CENTER);
         timerThread = new TimerThread(timer);
         timerThread.start();
@@ -57,6 +72,7 @@ public class GUI extends JFrame {
             }
         }
     }
+
 
     public void buildQueueBox(){
 
@@ -96,6 +112,7 @@ public class GUI extends JFrame {
         }
 
         @Override
+
         public void run() {
             while (isRunning) {
 
@@ -106,7 +123,14 @@ public class GUI extends JFrame {
                         Date currentTime = currentCalendar.getTime();
                         long time = endTime.getTime() - currentTime.getTime();
                         int timeLeft = (int)time / 1000;
-                        String t = (timeLeft/60) + ":" + (timeLeft%60);
+                        String t;
+                        if(timeLeft >= 60) {
+                            t = (timeLeft / 60) + ":" + String.format("%02d", (timeLeft % 60));
+                        }else if(timeLeft < 60 && timeLeft > 0){
+                            t = String.format("%02d", timeLeft);
+                        }else{
+                            t = "00";
+                        }
                         timeLabel.setText(t + "");
                     }
                 });
