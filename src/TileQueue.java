@@ -12,7 +12,7 @@ public class TileQueue {
     private TileQueue() {
 
         for(int i = 0; i < MAX_SIZE; i++){
-            queue.add(new Tile(-1,-1,Main.getNewTextField()));
+            queue.add(new Tile(Main.getNewTextField()));
         }
 
         head = 0;
@@ -41,7 +41,7 @@ public class TileQueue {
     }
 
     private void enqueue(){
-        queue.add(new Tile(-1,-1, Main.getNewTextField()));
+        queue.add(new Tile(Main.getNewTextField()));
     }
 
 

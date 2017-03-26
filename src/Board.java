@@ -18,17 +18,16 @@ public class Board {
             for (int j = 0; j < NUMBER_OF_COLUMNS ; j++) {
                 JTextField t = Main.getNewTextField();
                 final Point boardPosition = new Point(i,j);
-                board[i][j] = new Tile(i,j,t);
+                board[i][j] = new Tile(t);
 
                 t.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        System.out.println(boardPosition.x + ", " + boardPosition.y);
-                        performMove(boardPosition.x,boardPosition.y);
+                        performMove(boardPosition.y, boardPosition.x);
                     }
                 });
                 if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
-                    board[i][j].setNumber(-1);
+                    board[i][j].emptyTile();
                 }
             }
         }
@@ -113,24 +112,24 @@ public class Board {
         board[row][column].setNumber(0);
 
         if (isCornerSpace(0, 0).equals("TOP_LEFT")) {
-            board[0][1].setNumber(0);
-            board[1][0].setNumber(0);
-            board[1][1].setNumber(0);
+            board[0][1].emptyTile();
+            board[1][0].emptyTile();
+            board[1][1].emptyTile();
         }
         if (isCornerSpace(0, 0).equals("BOTTOM_RIGHT")) {
-            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1].setNumber(0);
-            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].setNumber(0);
-            board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].setNumber(0);
+            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1].emptyTile();
+            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].emptyTile();
+            board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].emptyTile();
         }
         if (isCornerSpace(0, 0).equals("BOTTOM_LEFT")) {
-            board[NUMBER_OF_ROWS - 1][0].setNumber(0);
-            board[NUMBER_OF_ROWS - 2][0].setNumber(0);
-            board[NUMBER_OF_ROWS - 1][1].setNumber(0);
+            board[NUMBER_OF_ROWS - 1][0].emptyTile();
+            board[NUMBER_OF_ROWS - 2][0].emptyTile();
+            board[NUMBER_OF_ROWS - 1][1].emptyTile();
         }
         if (isCornerSpace(0, 0).equals("TOP_RIGHT")) {
-            board[0][NUMBER_OF_COLUMNS - 1].setNumber(0);
-            board[0][NUMBER_OF_COLUMNS - 2].setNumber(0);
-            board[1][NUMBER_OF_COLUMNS - 1].setNumber(0);
+            board[0][NUMBER_OF_COLUMNS - 1].emptyTile();
+            board[0][NUMBER_OF_COLUMNS - 2].emptyTile();
+            board[1][NUMBER_OF_COLUMNS - 1].emptyTile();
         }
     }
 

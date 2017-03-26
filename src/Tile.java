@@ -4,12 +4,8 @@ public class Tile{
 
     private JTextField textField;
     private int number;
-    private int x;
-    private int y;
 
-    public Tile(int _x, int _y, JTextField _field) {
-        x = _x;
-        y = _y;
+    public Tile(JTextField _field) {
         textField = _field;
         number = getTileValue();
         textField.setText(number + "");
@@ -29,10 +25,12 @@ public class Tile{
 
     public void setNumber(int number) {
         this.number = number;
-        if(number == -1){
-            textField.setText("");
-        }else{
-            textField.setText(number + "");
-        }
+
+    }
+
+    public void emptyTile() {
+        number = 0;
+        textField.setText("");
+
     }
 }
