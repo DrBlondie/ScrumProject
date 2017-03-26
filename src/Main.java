@@ -8,8 +8,7 @@ import java.awt.*;
 public class Main {
 
     public static Board board = new Board();
-    public static Tile[][] tiles = new Tile[9][9];
-    public static TileQueue queue = new TileQueue();
+
     public static void main(String[] args){
         startGame();
     }
@@ -18,8 +17,8 @@ public class Main {
      * Starts the game
      */
     public static void startGame(){
-        GUI gui = new GUI();
-        gui.setVisible(true);
+        GUI boardGUI = new GUI();
+        boardGUI.setVisible(true);
     }
 
     /***

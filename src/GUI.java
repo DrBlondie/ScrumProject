@@ -58,7 +58,7 @@ public class GUI extends JFrame {
         c.gridx = 0;
         c.gridwidth = 50;
         c.insets = new Insets(0, 0, 0, 0);
-        ArrayList<Tile> queue = Main.queue.getQueue();
+        ArrayList<Tile> queue = TileQueue.getTileQueue().getQueue();
         for (int i = 0; i < queue.size(); i ++) {
             Tile tile = queue.get(i);
             c.gridy = i;

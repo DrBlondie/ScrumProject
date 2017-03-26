@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,15 +16,15 @@ public class Board {
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < NUMBER_OF_COLUMNS ; j++) {
                 JTextField t = Main.getNewTextField();
+
+                board[i][j] = new Tile(i,j,t);
                 t.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
-                        t.setBackground(Color.red);
+                        //performMove(board[][]);
                     }
                 });
-                board[i][j] = new Tile(i,j,t);
-                if(i == 0 || i == 8 || j == 0 || j == 8){
+                if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
                     board[i][j].setNumber(-1);
                 }
             }
@@ -38,16 +37,22 @@ public class Board {
         return board;
     }
 
-    public String performMove(Tile placedTile) {
+    public String performMove(int row, int column) {
 
-        int score = 0;
+        int surroundingTileSummation = 0;
 
-        /**if (isCornerSpace( int row, int column)){
-            score = calculateCornerPoints();
+        if (isCornerSpace(row, column) != "FALSE") {
+            surroundingTileSummation = calculateCornerPoints();
          }
-        **/
 
-        return "The value of the surrounding tiles modulo the queue tile value is:" + 0;
+        board[row][column] = TileQueue.getTileQueue().placeTile();
+
+        if (isModulo(row, column, surroundingTileSummation)) {
+            removeCornerTiles(row, column);
+        }
+
+
+        return "The value of the surrounding tiles modulo the queue tile value is:" + surroundingTileSummation;
     }
 
     /*
@@ -99,6 +104,35 @@ public class Board {
             return sum % 10;
         }
         return sum;
+    }
+
+    public void removeCornerTiles(int row, int column) {
+        board[row][column].setNumber(0);
+
+        if (isCornerSpace(0, 0).equals("TOP_LEFT")) {
+            board[0][1].setNumber(0);
+            board[1][0].setNumber(0);
+            board[1][1].setNumber(0);
+        }
+        if (isCornerSpace(0, 0).equals("BOTTOM_RIGHT")) {
+            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1].setNumber(0);
+            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].setNumber(0);
+            board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].setNumber(0);
+        }
+        if (isCornerSpace(0, 0).equals("BOTTOM_LEFT")) {
+            board[NUMBER_OF_ROWS - 1][0].setNumber(0);
+            board[NUMBER_OF_ROWS - 2][0].setNumber(0);
+            board[NUMBER_OF_ROWS - 1][1].setNumber(0);
+        }
+        if (isCornerSpace(0, 0).equals("TOP_RIGHT")) {
+            board[0][NUMBER_OF_COLUMNS - 1].setNumber(0);
+            board[0][NUMBER_OF_COLUMNS - 2].setNumber(0);
+            board[1][NUMBER_OF_COLUMNS - 1].setNumber(0);
+        }
+    }
+
+    private boolean isModulo(int row, int column, int surroundingTileSummation) {
+        return board[row][column].getNumber() == surroundingTileSummation;
     }
 }
 
