@@ -23,7 +23,7 @@ public class Board {
                 t.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        performMove(boardPosition.y, boardPosition.x);
+                        performMove(boardPosition.x, boardPosition.y);
                     }
                 });
                 if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
@@ -47,7 +47,7 @@ public class Board {
             surroundingTileSummation = calculateCornerPoints();
          }
 
-        board[row][column] = TileQueue.getTileQueue().placeTile();
+        board[row][column].setNumber(TileQueue.getTileQueue().placeTile());
 
         if (isModulo(row, column, surroundingTileSummation)) {
             removeCornerTiles(row, column);

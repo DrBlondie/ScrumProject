@@ -2,9 +2,10 @@ import java.util.ArrayList;
 
 public class TileQueue {
 
+    private static final int MAX_SIZE = 5;
     private static TileQueue gameQueue;
-    private static ArrayList<Tile> queue = new ArrayList<>();
-    private final int MAX_SIZE = 5;
+    private static ArrayList<Integer> numberQueue = new ArrayList<>();
+    private static Tile[] queue = new Tile[MAX_SIZE];
     private int head;
     private int tail;
     private int placedTiles;
@@ -12,13 +13,20 @@ public class TileQueue {
     private TileQueue() {
 
         for(int i = 0; i < MAX_SIZE; i++){
-            queue.add(new Tile(Main.getNewTextField()));
+            queue[i] = new Tile(Main.getNewTextField());
+            numberQueue.add(queue[i].getNumber());
         }
 
         head = 0;
         tail = MAX_SIZE - 1;
         placedTiles = 0;
 
+    }
+
+    public static void updateQueue(){
+        for(int i = 0; i < MAX_SIZE; i++){
+            queue[i].setNumber(numberQueue.get(i));
+        }
     }
 
     public static TileQueue getTileQueue() {
@@ -28,12 +36,13 @@ public class TileQueue {
         return gameQueue;
     }
 
-    private Tile dequeue(){
+    private int dequeue(){
 
-        if(queue.size() > 0){
+        if(numberQueue.size() > 0){
             placedTiles++;
-            Tile nextTile = queue.get(head);
-            queue.remove(head);
+            int nextTile = numberQueue.get(head);
+            numberQueue.remove(head);
+            updateQueue();
             return nextTile;
         }
         throw new Error("There are not sufficient Tiles in the queue");
@@ -41,15 +50,15 @@ public class TileQueue {
     }
 
     private void enqueue(){
-        queue.add(new Tile(Main.getNewTextField()));
+        numberQueue.add((int) (Math.random() * 10));
     }
 
 
-    public ArrayList getQueue() {
+    public Tile[] getQueue() {
         return queue;
     }
 
-    public Tile placeTile(){
+    public int placeTile(){
         enqueue();
         return dequeue();
     }

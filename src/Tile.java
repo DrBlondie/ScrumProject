@@ -25,7 +25,7 @@ public class Tile{
 
     public void setNumber(int number) {
         this.number = number;
-
+        this.textField.setText(number + "");
     }
 
     public void emptyTile() {

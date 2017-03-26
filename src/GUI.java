@@ -83,9 +83,9 @@ public class GUI extends JFrame {
         c.gridx = 0;
         c.gridwidth = 50;
         c.insets = new Insets(0, 0, 0, 0);
-        ArrayList<Tile> queue = TileQueue.getTileQueue().getQueue();
-        for (int i = 0; i < queue.size(); i ++) {
-            Tile tile = queue.get(i);
+        Tile[] queue = TileQueue.getTileQueue().getQueue();
+        for (int i = 0; i < queue.length; i ++) {
+            Tile tile = queue[i];
             c.gridy = i;
             queueBox.add(tile.getTextField(), c);
         }
