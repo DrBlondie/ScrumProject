@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,12 +24,20 @@ public class GUI extends JFrame {
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        header.add(label);
-
+        header.add(label, BorderLayout.CENTER);
+        JLabel timer = new JLabel();
+        header.add(timer, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
-        add(playField, BorderLayout.CENTER);
-        add(queueBox, BorderLayout.EAST);
+
+        JPanel boardPanel = new JPanel();
+        boardPanel.setLayout(new GridBagLayout());
+        boardPanel.add(playField);
+        boardPanel.add(queueBox);
+        add(boardPanel,BorderLayout.CENTER);
+        timerThread = new TimerThread(timer);
+        timerThread.start();
     }
+
 
     public void buildPlayField() {
         playField.setLayout(new GridBagLayout());
@@ -71,30 +80,34 @@ public class GUI extends JFrame {
 
         protected boolean isRunning;
 
-        protected JLabel dateLabel;
         protected JLabel timeLabel;
+        private Date endTime;
 
         protected SimpleDateFormat dateFormat =
                 new SimpleDateFormat("M/d/YY");
         protected SimpleDateFormat timeFormat =
                 new SimpleDateFormat("h:mm:ss");
 
-        public TimerThread(JLabel dateLabel, JLabel timeLabel) {
-            this.dateLabel = dateLabel;
+        public TimerThread(JLabel timeLabel) {
             this.timeLabel = timeLabel;
+            endTime = Calendar.getInstance().getTime();
+            endTime.setTime(endTime.getTime() + 180000);
             this.isRunning = true;
         }
 
         @Override
         public void run() {
             while (isRunning) {
+
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         Calendar currentCalendar = Calendar.getInstance();
                         Date currentTime = currentCalendar.getTime();
-                        dateLabel.setText(dateFormat.format(currentTime));
-                        timeLabel.setText(timeFormat.format(currentTime));
+                        long time = endTime.getTime() - currentTime.getTime();
+                        int timeLeft = (int)time / 1000;
+                        String t = (timeLeft/60) + ":" + (timeLeft%60);
+                        timeLabel.setText(t + "");
                     }
                 });
 

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -16,12 +17,14 @@ public class Board {
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < NUMBER_OF_COLUMNS ; j++) {
                 JTextField t = Main.getNewTextField();
-
+                final Point boardPosition = new Point(i,j);
                 board[i][j] = new Tile(i,j,t);
+
                 t.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        //performMove(board[][]);
+                        System.out.println(boardPosition.x + ", " + boardPosition.y);
+                        performMove(boardPosition.x,boardPosition.y);
                     }
                 });
                 if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
