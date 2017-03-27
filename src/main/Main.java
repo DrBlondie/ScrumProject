@@ -1,3 +1,9 @@
+package main;
+
+import model.Board;
+import model.TileQueue;
+import view.BoardGUI;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -8,7 +14,8 @@ import java.awt.*;
 public class Main {
 
     public static Board board = new Board();
-    public static int maxMoves = 10;
+    public static TileQueue queue;
+    public static int maxMoves =50;
     public static void main(String[] args){
         startGame();
     }
@@ -17,8 +24,13 @@ public class Main {
      * Starts the game
      */
     public static void startGame(){
-        GUI boardGUI = new GUI();
-        boardGUI.setVisible(true);
+        queue = TileQueue.getTileQueue();
+        BoardGUI gameBoardGUI = new BoardGUI();
+        gameBoardGUI.addObserver(board);
+        gameBoardGUI.addObserver(queue);
+        queue.startGame();
+        board.startGame();
+        gameBoardGUI.setVisible(true);
 
     }
 

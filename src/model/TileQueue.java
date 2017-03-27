@@ -1,6 +1,12 @@
-import java.util.ArrayList;
+package model;
 
-public class TileQueue {
+import main.Main;
+import main.Tile;
+
+import java.util.ArrayList;
+import java.util.Observable;
+
+public class TileQueue extends Observable{
 
     private static final int MAX_SIZE = 5;
     private static TileQueue gameQueue;
@@ -13,7 +19,7 @@ public class TileQueue {
     private TileQueue() {
 
         for (int i = 0; i < MAX_SIZE; i++) {
-            queue[i] = new Tile(Main.getNewTextField());
+            queue[i] = new Tile();
             numberQueue.add(queue[i].getNumber());
         }
 
@@ -21,6 +27,11 @@ public class TileQueue {
         tail = MAX_SIZE - 1;
         placedTiles = 0;
 
+    }
+
+    public void startGame(){
+        setChanged();
+        notifyObservers();
     }
 
     public static void updateQueue() {
@@ -50,7 +61,6 @@ public class TileQueue {
     }
 
     private void enqueue() {
-
         numberQueue.add((int) (Math.random() * 10));
     }
 
@@ -62,7 +72,10 @@ public class TileQueue {
     public int placeTile() {
 
         enqueue();
+        int dequeued = dequeue();
 
-        return dequeue();
+        setChanged();
+        notifyObservers();
+        return dequeued;
     }
 }

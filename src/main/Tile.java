@@ -1,20 +1,14 @@
-import javax.swing.*;
+package main;
+
 
 public class Tile{
 
-    private JTextField textField;
     private int number;
     private boolean isOccupied;
 
-    public Tile(JTextField _field) {
-        textField = _field;
+    public Tile() {
         isOccupied = true;
         number = getRandomNumber();
-        textField.setText(number + "");
-    }
-
-    public JTextField getTextField(){
-        return textField;
     }
 
     public int getRandomNumber() {
@@ -27,7 +21,6 @@ public class Tile{
 
     public void setNumber(int number) {
         this.number = number;
-        this.textField.setText(number + "");
     }
 
     public boolean isOccupied() {
@@ -40,7 +33,6 @@ public class Tile{
 
     public void emptyTile() {
         number = 0;
-        textField.setText("");
         isOccupied = false;
     }
 }

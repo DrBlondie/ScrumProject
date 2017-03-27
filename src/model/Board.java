@@ -1,62 +1,51 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+package model;
 
-public class Board {
+import view.BoardGUI;
+import main.Tile;
+import main.Main;
 
-    protected static int NUMBER_OF_MOVES;
+import java.util.Observable;
+
+
+public class Board extends Observable {
+
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
+    public static int NUMBER_OF_MOVES;
 
     public Board() {
-
         board = new Tile[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
-
-            for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-                for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
-                    JTextField t = Main.getNewTextField();
-                    final Point boardPosition = new Point(i, j);
-                    board[i][j] = new Tile(t);
-
-
-                            t.addMouseListener(new MouseAdapter() {
-                                @Override
-                                public void mouseClicked(MouseEvent e) {
-                                    if(NUMBER_OF_MOVES!=50) {
-                                        performMove(boardPosition.x, boardPosition.y);
-                                        NUMBER_OF_MOVES++;
-                                        GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));
-                                    }
-                                }
-                            });
-
-
-                        if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
-                            board[i][j].emptyTile();
-                        }
-
+        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+            for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
+                board[i][j] = new Tile();
+                if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
+                    board[i][j].emptyTile();
                 }
-
-
+            }
         }
-
     }
 
-    public Tile[][] getBoard(){
+    public void startGame(){
+        setChanged();
+        notifyObservers();
+    }
+
+    public Tile[][] getBoard() {
         return board;
     }
 
     public void performMove(int row, int column) {
-
+        if(NUMBER_OF_MOVES >= 50){
+            return;
+        }
         int surroundingTileSummation = 0;
         if (board[row][column].isOccupied()) {
             return;
         }
         if (isCornerSpace(row, column) != "FALSE") {
             surroundingTileSummation = calculateCornerPoints(row, column);
-         }
+        }
 
         board[row][column].setNumber(TileQueue.getTileQueue().placeTile());
         board[row][column].setOccupied(true);
@@ -65,6 +54,9 @@ public class Board {
             removeCornerTiles(row, column);
         }
 
+        NUMBER_OF_MOVES++;
+        setChanged();
+        notifyObservers();
 
     }
 
