@@ -1,18 +1,16 @@
 package model;
 
-import view.BoardGUI;
 import main.Tile;
-import main.Main;
 
 import java.util.Observable;
 
 
 public class Board extends Observable {
 
+    public static int NUMBER_OF_MOVES = 0;
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
-    public static int NUMBER_OF_MOVES;
 
     public Board() {
         board = new Tile[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
@@ -36,27 +34,29 @@ public class Board extends Observable {
     }
 
     public void performMove(int row, int column) {
+
         if(NUMBER_OF_MOVES >= 50){
             return;
-        }
-        int surroundingTileSummation = 0;
-        if (board[row][column].isOccupied()) {
-            return;
-        }
-        if (isCornerSpace(row, column) != "FALSE") {
-            surroundingTileSummation = calculateCornerPoints(row, column);
-        }
+        } else {
+            int surroundingTileSummation = 0;
+            if (board[row][column].isOccupied()) {
+                return;
+            }
+            if (isCornerSpace(row, column) != "FALSE") {
+                surroundingTileSummation = calculateCornerPoints(row, column);
+            }
 
-        board[row][column].setNumber(TileQueue.getTileQueue().placeTile());
-        board[row][column].setOccupied(true);
+            board[row][column].setNumber(TileQueue.getTileQueue().placeTile());
+            board[row][column].setOccupied(true);
 
-        if (isModulo(row, column, surroundingTileSummation)) {
-            removeCornerTiles(row, column);
+            if (isModulo(row, column, surroundingTileSummation)) {
+                removeCornerTiles(row, column);
+            }
+
+            NUMBER_OF_MOVES++;
+            setChanged();
+            notifyObservers();
         }
-
-        NUMBER_OF_MOVES++;
-        setChanged();
-        notifyObservers();
 
     }
 

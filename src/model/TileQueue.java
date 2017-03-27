@@ -1,6 +1,5 @@
 package model;
 
-import main.Main;
 import main.Tile;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ public class TileQueue extends Observable{
     private static ArrayList<Integer> numberQueue = new ArrayList<>();
     private static Tile[] queue = new Tile[MAX_SIZE];
     private int head;
-    private int tail;
     private int placedTiles;
 
     private TileQueue() {
@@ -24,14 +22,8 @@ public class TileQueue extends Observable{
         }
 
         head = 0;
-        tail = MAX_SIZE - 1;
         placedTiles = 0;
 
-    }
-
-    public void startGame(){
-        setChanged();
-        notifyObservers();
     }
 
     public static void updateQueue() {
@@ -45,6 +37,11 @@ public class TileQueue extends Observable{
             gameQueue = new TileQueue();
         }
         return gameQueue;
+    }
+
+    public void startGame() {
+        setChanged();
+        notifyObservers();
     }
 
     private int dequeue() {

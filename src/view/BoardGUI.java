@@ -7,21 +7,27 @@ import model.TileQueue;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
 
 public class BoardGUI extends JFrame implements Observer {
+    protected static JLabel movesLabel = new JLabel("");
     protected TimerThread timerThread;
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
-    protected static JLabel movesLabel = new JLabel("");
 
     public BoardGUI() {
+
         setTitle("Sum Fun");
         setSize(800, 600);
         setMinimumSize(new Dimension(800, 600));
@@ -32,6 +38,25 @@ public class BoardGUI extends JFrame implements Observer {
         c.fill = GridBagConstraints.NONE;
         c.gridy = 0;
         c.gridx = 0;
+
+        JMenuBar gameMenu = new JMenuBar();
+        JMenu game = new JMenu("Game");
+        JMenu scores = new JMenu("Scores");
+        JMenuItem startGame = new JMenuItem("Start New Game");
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        JMenuItem viewScores = new JMenuItem("Leader Scoreboard");
+        game.add(startGame);
+        game.add(exit);
+        scores.add(viewScores);
+        gameMenu.add(game);
+        gameMenu.add(scores);
+        setJMenuBar(gameMenu);
 
         JPanel header = new JPanel();
         header.setLayout(new GridLayout(1, 3));
@@ -79,7 +104,7 @@ public class BoardGUI extends JFrame implements Observer {
                 gameBoard[x][y].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        Main.board.performMove(boardPosition.x, boardPosition.y);
+                        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
                         //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
                     }
                 });
@@ -127,7 +152,7 @@ public class BoardGUI extends JFrame implements Observer {
                     }
                 }
             }
-            movesLabel.setText("Number of moves left: " + (Main.maxMoves - Board.NUMBER_OF_MOVES));
+            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
         }
     }
 
@@ -137,12 +162,11 @@ public class BoardGUI extends JFrame implements Observer {
         protected boolean isRunning;
 
         protected JLabel timeLabel;
-        private Date endTime;
-
         protected SimpleDateFormat dateFormat =
                 new SimpleDateFormat("M/d/YY");
         protected SimpleDateFormat timeFormat =
                 new SimpleDateFormat("h:mm:ss");
+        private Date endTime;
 
         public TimerThread(JLabel timeLabel) {
             this.timeLabel = timeLabel;

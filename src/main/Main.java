@@ -13,9 +13,10 @@ import java.awt.*;
  */
 public class Main {
 
-    public static Board board = new Board();
-    public static TileQueue queue;
-    public static int maxMoves =50;
+    public static final int MAX_MOVES = 50;
+    public static Board gameBoard = new Board();
+    public static TileQueue queue = TileQueue.getTileQueue();
+
     public static void main(String[] args){
         startGame();
     }
@@ -26,10 +27,10 @@ public class Main {
     public static void startGame(){
         queue = TileQueue.getTileQueue();
         BoardGUI gameBoardGUI = new BoardGUI();
-        gameBoardGUI.addObserver(board);
+        gameBoardGUI.addObserver(gameBoard);
         gameBoardGUI.addObserver(queue);
         queue.startGame();
-        board.startGame();
+        gameBoard.startGame();
         gameBoardGUI.setVisible(true);
 
     }
