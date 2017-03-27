@@ -1,5 +1,6 @@
 package model;
 
+import main.Main;
 import main.Tile;
 
 import java.util.Observable;
@@ -35,7 +36,7 @@ public class Board extends Observable {
 
     public void performMove(int row, int column) {
 
-        if(NUMBER_OF_MOVES >= 50){
+        if(NUMBER_OF_MOVES >= Main.MAX_MOVES){
             return;
         } else {
             int surroundingTileSummation = 0;

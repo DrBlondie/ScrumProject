@@ -1,7 +1,8 @@
 package model;
 
+import main.Main;
 import main.Tile;
-
+import model.Board;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -10,15 +11,15 @@ public class TileQueue extends Observable{
     private static final int MAX_SIZE = 5;
     private static TileQueue gameQueue;
     private static ArrayList<Integer> numberQueue = new ArrayList<>();
-    private static Tile[] queue = new Tile[MAX_SIZE];
+
     private int head;
     private int placedTiles;
 
     private TileQueue() {
 
-        for (int i = 0; i < MAX_SIZE; i++) {
-            queue[i] = new Tile();
-            numberQueue.add(queue[i].getNumber());
+        for (int i = 0; i < 5; i++) {
+
+            numberQueue.add((int) (Math.random() * 10));
         }
 
         head = 0;
@@ -26,11 +27,7 @@ public class TileQueue extends Observable{
 
     }
 
-    public static void updateQueue() {
-        for (int i = 0; i < MAX_SIZE; i++) {
-            queue[i].setNumber(numberQueue.get(i));
-        }
-    }
+
 
     public static TileQueue getTileQueue() {
         if (gameQueue == null) {
@@ -50,9 +47,11 @@ public class TileQueue extends Observable{
             placedTiles++;
             int nextTile = numberQueue.get(head);
             numberQueue.remove(head);
-            updateQueue();
             return nextTile;
+
         }
+
+
         throw new Error("There are not sufficient Tiles in the queue");
 
     }
@@ -62,15 +61,15 @@ public class TileQueue extends Observable{
     }
 
 
-    public Tile[] getQueue() {
-        return queue;
+    public ArrayList<Integer> getQueue() {
+        return numberQueue;
     }
 
     public int placeTile() {
-
-        enqueue();
+        if(placedTiles<Main.MAX_MOVES-5) {
+            enqueue();
+        }
         int dequeued = dequeue();
-
         setChanged();
         notifyObservers();
         return dequeued;

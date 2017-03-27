@@ -11,7 +11,7 @@ public class Tile{
         number = getRandomNumber();
     }
 
-    public int getRandomNumber() {
+    private int getRandomNumber() {
         return (int) (Math.random() * 10);
     }
 

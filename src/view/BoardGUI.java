@@ -12,10 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 
 public class BoardGUI extends JFrame implements Observer {
@@ -136,11 +133,20 @@ public class BoardGUI extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+
         if (o.getClass().getSimpleName().equals("TileQueue")) {
-            Tile[] _queue = ((TileQueue) o).getQueue();
-            for (int i = 0; i < queue.length; i++) {
-                queue[i].setText(_queue[i].getNumber() + "");
-            }
+            ArrayList<Integer> _queue = ((TileQueue) o).getQueue();
+            int i;
+
+                //added redundant check for proper size
+                for (i = 0; i < _queue.size()&&i<queue.length; i++) {
+                    queue[i].setText(_queue.get(i) + "");
+                    System.out.println(Board.NUMBER_OF_MOVES);
+                }
+                for(;i<queue.length;i++){
+                    queue[i].setText("");
+                }
+
         } else if (o.getClass().getSimpleName().equals("Board")) {
             Tile[][] _gameBoard = ((Board) o).getBoard();
             for (int y = 0; y < _gameBoard.length; y++) {
@@ -151,9 +157,12 @@ public class BoardGUI extends JFrame implements Observer {
                         gameBoard[x][y].setText("");
                     }
                 }
+
+
             }
             movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
         }
+
     }
 
 
