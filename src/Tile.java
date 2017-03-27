@@ -4,10 +4,12 @@ public class Tile{
 
     private JTextField textField;
     private int number;
+    private boolean isOccupied;
 
     public Tile(JTextField _field) {
         textField = _field;
-        number = getTileValue();
+        isOccupied = true;
+        number = getRandomNumber();
         textField.setText(number + "");
     }
 
@@ -15,7 +17,7 @@ public class Tile{
         return textField;
     }
 
-    public int getTileValue() {
+    public int getRandomNumber() {
         return (int) (Math.random() * 10);
     }
 
@@ -28,9 +30,17 @@ public class Tile{
         this.textField.setText(number + "");
     }
 
+    public boolean isOccupied() {
+        return isOccupied;
+    }
+
+    public void setOccupied(boolean value) {
+        isOccupied = value;
+    }
+
     public void emptyTile() {
         number = 0;
         textField.setText("");
-
+        isOccupied = false;
     }
 }

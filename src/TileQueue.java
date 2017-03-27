@@ -12,7 +12,7 @@ public class TileQueue {
 
     private TileQueue() {
 
-        for(int i = 0; i < MAX_SIZE; i++){
+        for (int i = 0; i < MAX_SIZE; i++) {
             queue[i] = new Tile(Main.getNewTextField());
             numberQueue.add(queue[i].getNumber());
         }
@@ -23,8 +23,8 @@ public class TileQueue {
 
     }
 
-    public static void updateQueue(){
-        for(int i = 0; i < MAX_SIZE; i++){
+    public static void updateQueue() {
+        for (int i = 0; i < MAX_SIZE; i++) {
             queue[i].setNumber(numberQueue.get(i));
         }
     }
@@ -36,9 +36,9 @@ public class TileQueue {
         return gameQueue;
     }
 
-    private int dequeue(){
+    private int dequeue() {
 
-        if(numberQueue.size() > 0){
+        if (numberQueue.size() > 0) {
             placedTiles++;
             int nextTile = numberQueue.get(head);
             numberQueue.remove(head);
@@ -49,7 +49,8 @@ public class TileQueue {
 
     }
 
-    private void enqueue(){
+    private void enqueue() {
+
         numberQueue.add((int) (Math.random() * 10));
     }
 
@@ -58,14 +59,10 @@ public class TileQueue {
         return queue;
     }
 
-    public int placeTile(){
+    public int placeTile() {
+
         enqueue();
+
         return dequeue();
     }
-
-    public int getPlacedTiles() {
-        return placedTiles;
-    }
-
-
 }

@@ -3,13 +3,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
 public class Board {
 
+    protected static int NUMBER_OF_MOVES;
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
-    protected static int NUMBER_OF_MOVES ;
 
     public Board() {
 
@@ -49,22 +48,24 @@ public class Board {
         return board;
     }
 
-    public String performMove(int row, int column) {
+    public void performMove(int row, int column) {
 
         int surroundingTileSummation = 0;
-
+        if (board[row][column].isOccupied()) {
+            return;
+        }
         if (isCornerSpace(row, column) != "FALSE") {
-            surroundingTileSummation = calculateCornerPoints();
+            surroundingTileSummation = calculateCornerPoints(row, column);
          }
 
         board[row][column].setNumber(TileQueue.getTileQueue().placeTile());
+        board[row][column].setOccupied(true);
 
         if (isModulo(row, column, surroundingTileSummation)) {
             removeCornerTiles(row, column);
         }
 
 
-        return "The value of the surrounding tiles modulo the queue tile value is:" + surroundingTileSummation;
     }
 
     /*
@@ -89,56 +90,57 @@ public class Board {
     /*
     Uses the board indices to get number values to corner tiles
      */
-    public int calculateCornerPoints() {
+    public int calculateCornerPoints(int row, int column) {
         int sum = 0;
-        if (isCornerSpace(0,0).equals("TOP_LEFT")) {
+        if (isCornerSpace(row, column).equals("TOP_LEFT")) {
             sum += board[0][1].getNumber();
             sum += board[1][1].getNumber();
             sum += board[1][0].getNumber();
             return sum % 10;
         }
-        if (isCornerSpace(0,0).equals("BOTTOM_RIGHT")) {
-            sum += board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1].getNumber();
+        if (isCornerSpace(row, column).equals("BOTTOM_RIGHT")) {
             sum += board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].getNumber();
+            sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].getNumber();
             sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].getNumber();
             return sum % 10;
         }
-        if (isCornerSpace(0,0).equals("BOTTOM_LEFT")) {
-            sum += board[NUMBER_OF_ROWS - 1][0].getNumber();
+        if (isCornerSpace(row, column).equals("BOTTOM_LEFT")) {
             sum += board[NUMBER_OF_ROWS - 2][0].getNumber();
+            sum += board[NUMBER_OF_ROWS - 2][1].getNumber();
             sum += board[NUMBER_OF_ROWS - 1][1].getNumber();
             return sum % 10;
         }
-        if (isCornerSpace(0,0).equals("TOP_RIGHT")) {
+        if (isCornerSpace(row, column).equals("TOP_RIGHT")) {
             sum += board[0][NUMBER_OF_COLUMNS - 1].getNumber();
-            sum += board[0][NUMBER_OF_COLUMNS - 2].getNumber();
+            sum += board[1][NUMBER_OF_COLUMNS - 2].getNumber();
             sum += board[1][NUMBER_OF_COLUMNS - 1].getNumber();
             return sum % 10;
         }
         return sum;
     }
 
-    public void removeCornerTiles(int row, int column) {
-        board[row][column].setNumber(0);
 
-        if (isCornerSpace(0, 0).equals("TOP_LEFT")) {
+    public void removeCornerTiles(int row, int column) {
+        board[row][column].emptyTile();
+
+        if (isCornerSpace(row, column).equals("TOP_LEFT")) {
             board[0][1].emptyTile();
             board[1][0].emptyTile();
             board[1][1].emptyTile();
         }
-        if (isCornerSpace(0, 0).equals("BOTTOM_RIGHT")) {
-            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 1].emptyTile();
+        if (isCornerSpace(row, column).equals("BOTTOM_RIGHT")) {
             board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].emptyTile();
+            board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].emptyTile();
             board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].emptyTile();
         }
-        if (isCornerSpace(0, 0).equals("BOTTOM_LEFT")) {
-            board[NUMBER_OF_ROWS - 1][0].emptyTile();
+        if (isCornerSpace(row, column).equals("BOTTOM_LEFT")) {
             board[NUMBER_OF_ROWS - 2][0].emptyTile();
+            board[NUMBER_OF_ROWS - 2][1].emptyTile();
             board[NUMBER_OF_ROWS - 1][1].emptyTile();
         }
-        if (isCornerSpace(0, 0).equals("TOP_RIGHT")) {
+        if (isCornerSpace(row, column).equals("TOP_RIGHT")) {
             board[0][NUMBER_OF_COLUMNS - 1].emptyTile();
-            board[0][NUMBER_OF_COLUMNS - 2].emptyTile();
+            board[1][NUMBER_OF_COLUMNS - 2].emptyTile();
             board[1][NUMBER_OF_COLUMNS - 1].emptyTile();
         }
     }

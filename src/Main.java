@@ -8,7 +8,7 @@ import java.awt.*;
 public class Main {
 
     public static Board board = new Board();
-    public static int maxMoves =50;
+    public static int maxMoves = 10;
     public static void main(String[] args){
         startGame();
     }

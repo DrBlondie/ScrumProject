@@ -1,17 +1,15 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class GUI extends JFrame {
+    protected static JLabel movesLabel = new JLabel("Number of moves left :" + Main.maxMoves);
     protected TimerThread timerThread;
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
-    protected static JLabel movesLabel= new JLabel("Number of moves left :"+Main.maxMoves );
 
     public GUI() {
         setTitle("Sum Fun");
@@ -97,20 +95,21 @@ public class GUI extends JFrame {
         }
     }
 
-
-
+    public void repaintGUI() {
+        playField.repaint();
+        queueBox.repaint();
+    }
 
     public class TimerThread extends Thread {
 
         protected boolean isRunning;
 
         protected JLabel timeLabel;
-        private Date endTime;
-
         protected SimpleDateFormat dateFormat =
                 new SimpleDateFormat("M/d/YY");
         protected SimpleDateFormat timeFormat =
                 new SimpleDateFormat("h:mm:ss");
+        private Date endTime;
 
         public TimerThread(JLabel timeLabel) {
             this.timeLabel = timeLabel;
@@ -149,6 +148,7 @@ public class GUI extends JFrame {
                 }
             }
         }
+
 
         public void setRunning(boolean isRunning) {
             this.isRunning = isRunning;
