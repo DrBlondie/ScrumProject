@@ -8,7 +8,7 @@ import java.awt.*;
 public class Main {
 
     public static Board board = new Board();
-
+    public static int maxMoves =50;
     public static void main(String[] args){
         startGame();
     }
@@ -19,6 +19,7 @@ public class Main {
     public static void startGame(){
         GUI boardGUI = new GUI();
         boardGUI.setVisible(true);
+
     }
 
     /***
@@ -36,4 +37,5 @@ public class Main {
         t.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, 16));
         return t;
     }
+
 }

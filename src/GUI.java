@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class GUI extends JFrame {
     protected TimerThread timerThread;
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
-
+    protected static JLabel movesLabel= new JLabel("Number of moves left :"+Main.maxMoves );
 
     public GUI() {
         setTitle("Sum Fun");
@@ -27,12 +28,15 @@ public class GUI extends JFrame {
 
         JPanel header = new JPanel();
         header.setLayout( new GridLayout(1,3));
-        header.add(new JLabel(" "));
+
+        header.add(movesLabel);
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
         JLabel timer = new JLabel();
         timer.setFont(new Font("SansSerif", Font.BOLD, 20));
+
+
 
 
         header.add(label);
@@ -51,6 +55,8 @@ public class GUI extends JFrame {
         add(boardPanel,BorderLayout.CENTER);
         timerThread = new TimerThread(timer);
         timerThread.start();
+
+
     }
 
 
@@ -90,6 +96,8 @@ public class GUI extends JFrame {
             queueBox.add(tile.getTextField(), c);
         }
     }
+
+
 
 
     public class TimerThread extends Thread {

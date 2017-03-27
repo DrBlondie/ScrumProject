@@ -3,35 +3,45 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
 public class Board {
 
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
-
+    protected static int NUMBER_OF_MOVES ;
 
     public Board() {
 
         board = new Tile[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
 
-        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-            for (int j = 0; j < NUMBER_OF_COLUMNS ; j++) {
-                JTextField t = Main.getNewTextField();
-                final Point boardPosition = new Point(i,j);
-                board[i][j] = new Tile(t);
+            for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+                for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
+                    JTextField t = Main.getNewTextField();
+                    final Point boardPosition = new Point(i, j);
+                    board[i][j] = new Tile(t);
 
-                t.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        performMove(boardPosition.x, boardPosition.y);
-                    }
-                });
-                if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
-                    board[i][j].emptyTile();
+
+                            t.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    if(NUMBER_OF_MOVES!=50) {
+                                        performMove(boardPosition.x, boardPosition.y);
+                                        NUMBER_OF_MOVES++;
+                                        GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));
+                                    }
+                                }
+                            });
+
+
+                        if (i == 0 || i == NUMBER_OF_ROWS - 1 || j == 0 || j == NUMBER_OF_COLUMNS - 1) {
+                            board[i][j].emptyTile();
+                        }
+
                 }
-            }
-        }
 
+
+        }
 
     }
 
