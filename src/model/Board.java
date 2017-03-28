@@ -9,12 +9,13 @@ import java.util.Observable;
 public class Board extends Observable {
 
     public static int NUMBER_OF_MOVES = 0;
+    private final int NUMBER_OF_ROWS = 9; //<-- Shouldn't these be constants? -Ben
+    private final int NUMBER_OF_COLUMNS = 9; //<-- ""
     public int score = 0;
     private Tile[][] board;
-    private int NUMBER_OF_ROWS = 9;
-    private int NUMBER_OF_COLUMNS = 9;
 
     public Board() {
+
         board = new Tile[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
         for (int i = 0; i < NUMBER_OF_ROWS; i++) {
             for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
@@ -56,7 +57,6 @@ public class Board extends Observable {
 
 
             }
-
             NUMBER_OF_MOVES++;
             setChanged();
             notifyObservers();

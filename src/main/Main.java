@@ -25,6 +25,7 @@ public class Main {
      * Starts the game
      */
     public static void startGame(){
+
         queue = TileQueue.getTileQueue();
         BoardGUI gameBoardGUI = new BoardGUI();
         gameBoardGUI.addObserver(gameBoard);
@@ -32,7 +33,6 @@ public class Main {
         queue.startGame();
         gameBoard.startGame();
         gameBoardGUI.setVisible(true);
-
     }
 
     /***

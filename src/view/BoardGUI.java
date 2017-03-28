@@ -17,6 +17,7 @@ import java.util.*;
 
 
 public class BoardGUI extends JFrame implements Observer {
+
     protected static JLabel movesLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
@@ -86,6 +87,7 @@ public class BoardGUI extends JFrame implements Observer {
     }
 
     public void buildPlayField() {
+
         playField.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
@@ -104,7 +106,6 @@ public class BoardGUI extends JFrame implements Observer {
                         //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
                     }
                 });
-
                 c.gridx = x * 90;
                 c.gridy = y;
                 playField.add(gameBoard[x][y], c);
@@ -145,7 +146,6 @@ public class BoardGUI extends JFrame implements Observer {
                 for(;i<queue.length;i++){
                     queue[i].setText("");
                 }
-
         } else if (o.getClass().getSimpleName().equals("Board")) {
             Tile[][] _gameBoard = ((Board) o).getBoard();
             for (int y = 0; y < _gameBoard.length; y++) {
@@ -156,13 +156,9 @@ public class BoardGUI extends JFrame implements Observer {
                         gameBoard[x][y].setText("");
                     }
                 }
-
-
             }
             movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
             scoreTime.setText("Score: " + ((Board) o).getScore());
         }
-
     }
-
 }
