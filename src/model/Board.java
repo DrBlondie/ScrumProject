@@ -9,6 +9,7 @@ import java.util.Observable;
 public class Board extends Observable {
 
     public static int NUMBER_OF_MOVES = 0;
+    public int tilesRemoved = 0;
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
@@ -52,6 +53,7 @@ public class Board extends Observable {
 
             if (isModulo(row, column, surroundingTileSummation)) {
                 removeCornerTiles(row, column);
+                tilesRemoved += 3;
             }
 
             NUMBER_OF_MOVES++;
@@ -141,6 +143,8 @@ public class Board extends Observable {
     private boolean isModulo(int row, int column, int surroundingTileSummation) {
         return board[row][column].getNumber() == surroundingTileSummation;
     }
+
+    public int getScore() { return tilesRemoved * 10; }
 }
 
 

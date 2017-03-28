@@ -4,6 +4,7 @@ import main.Main;
 import main.Tile;
 import model.Board;
 import model.TileQueue;
+import sun.swing.SwingAccessor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ import java.util.*;
 
 public class BoardGUI extends JFrame implements Observer {
     protected static JLabel movesLabel = new JLabel("");
+    private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
@@ -61,7 +63,7 @@ public class BoardGUI extends JFrame implements Observer {
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        JLabel scoreTime = new JLabel();
+        //JLabel scoreTime = new JLabel("Score: ");
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 20));
         header.add(label);
         header.add(scoreTime);
@@ -158,6 +160,7 @@ public class BoardGUI extends JFrame implements Observer {
 
             }
             movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
+            scoreTime.setText("Score: " + ((Board) o).getScore());
         }
 
     }
