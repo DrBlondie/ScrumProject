@@ -8,7 +8,7 @@ import java.util.Observable;
 
 public class Board extends Observable {
 
-    public static int NUMBER_OF_MOVES = 0;
+    public static int NUMBER_OF_MOVES = 0; //<-- consider refactoring to camel case since it's not constant
     public int score = 0;
     private final int NUMBER_OF_ROWS = 9; //<-- Made these constants -Ben
     private final int NUMBER_OF_COLUMNS = 9; //<-- ""
@@ -54,8 +54,6 @@ public class Board extends Observable {
 
             if (isModulo(row, column, surroundingTileSummation)) {
                 score += removeCornerTiles(row, column) * 10;
-
-
             }
             NUMBER_OF_MOVES++;
             setChanged();

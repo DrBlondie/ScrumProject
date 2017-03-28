@@ -18,16 +18,11 @@ public class TileQueue extends Observable{
     private TileQueue() {
 
         for (int i = 0; i < 5; i++) {
-
             numberQueue.add((int) (Math.random() * 10));
         }
-
         head = 0;
         placedTiles = 0;
-
     }
-
-
 
     public static TileQueue getTileQueue() {
         if (gameQueue == null) {
@@ -42,18 +37,13 @@ public class TileQueue extends Observable{
     }
 
     private int dequeue() {
-
         if (numberQueue.size() > 0) {
             placedTiles++;
             int nextTile = numberQueue.get(head);
             numberQueue.remove(head);
             return nextTile;
-
         }
-
-
         throw new Error("There are not sufficient Tiles in the queue");
-
     }
 
     private void enqueue() {
