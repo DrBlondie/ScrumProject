@@ -17,7 +17,6 @@ import java.util.*;
 
 public class BoardGUI extends JFrame implements Observer {
     protected static JLabel movesLabel = new JLabel("");
-    protected TimerThread timerThread;
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
@@ -62,10 +61,10 @@ public class BoardGUI extends JFrame implements Observer {
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        JLabel timer = new JLabel();
-        timer.setFont(new Font("SansSerif", Font.BOLD, 20));
+        JLabel scoreTime = new JLabel();
+        scoreTime.setFont(new Font("SansSerif", Font.BOLD, 20));
         header.add(label);
-        header.add(timer);
+        header.add(scoreTime);
         add(header, BorderLayout.PAGE_START);
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
@@ -76,8 +75,6 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 1;
         boardPanel.add(queueBox, c);
         add(boardPanel, BorderLayout.CENTER);
-        timerThread = new TimerThread(timer);
-        timerThread.start();
 
 
     }
@@ -165,59 +162,4 @@ public class BoardGUI extends JFrame implements Observer {
 
     }
 
-
-    public class TimerThread extends Thread {
-
-        protected boolean isRunning;
-
-        protected JLabel timeLabel;
-        protected SimpleDateFormat dateFormat =
-                new SimpleDateFormat("M/d/YY");
-        protected SimpleDateFormat timeFormat =
-                new SimpleDateFormat("h:mm:ss");
-        private Date endTime;
-
-        public TimerThread(JLabel timeLabel) {
-            this.timeLabel = timeLabel;
-            endTime = Calendar.getInstance().getTime();
-            endTime.setTime(endTime.getTime() + 180000);
-            this.isRunning = true;
-        }
-
-        @Override
-
-        public void run() {
-            while (isRunning) {
-
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        Calendar currentCalendar = Calendar.getInstance();
-                        Date currentTime = currentCalendar.getTime();
-                        long time = endTime.getTime() - currentTime.getTime();
-                        int timeLeft = (int) time / 1000;
-                        String t;
-                        if (timeLeft >= 60) {
-                            t = (timeLeft / 60) + ":" + String.format("%02d", (timeLeft % 60));
-                        } else if (timeLeft < 60 && timeLeft > 0) {
-                            t = String.format("%02d", timeLeft);
-                        } else {
-                            t = "00";
-                        }
-                        timeLabel.setText(t + "");
-                    }
-                });
-
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                }
-            }
-        }
-
-        public void setRunning(boolean isRunning) {
-            this.isRunning = isRunning;
-        }
-
-    }
 }
