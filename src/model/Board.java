@@ -9,9 +9,9 @@ import java.util.Observable;
 public class Board extends Observable {
 
     public static int NUMBER_OF_MOVES = 0;
-    private final int NUMBER_OF_ROWS = 9; //<-- Shouldn't these be constants? -Ben
-    private final int NUMBER_OF_COLUMNS = 9; //<-- ""
     public int score = 0;
+    private final int NUMBER_OF_ROWS = 9; //<-- Made these constants -Ben
+    private final int NUMBER_OF_COLUMNS = 9; //<-- ""
     private Tile[][] board;
 
     public Board() {
