@@ -9,7 +9,7 @@ import java.util.Observable;
 public class Board extends Observable {
 
     public static int NUMBER_OF_MOVES = 0;
-    public int tilesRemoved = 0;
+    public int score = 0;
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
@@ -26,7 +26,7 @@ public class Board extends Observable {
         }
     }
 
-    public void startGame(){
+    public void startGame() {
         setChanged();
         notifyObservers();
     }
@@ -37,7 +37,7 @@ public class Board extends Observable {
 
     public void performMove(int row, int column) {
 
-        if(NUMBER_OF_MOVES >= Main.MAX_MOVES){
+        if (NUMBER_OF_MOVES >= Main.MAX_MOVES) {
             return;
         } else {
             int surroundingTileSummation = 0;
@@ -52,7 +52,9 @@ public class Board extends Observable {
             board[row][column].setOccupied(true);
 
             if (isModulo(row, column, surroundingTileSummation)) {
-                removeCornerTiles(row, column);
+                score += removeCornerTiles(row, column) * 10;
+
+
             }
 
             NUMBER_OF_MOVES++;
@@ -86,68 +88,114 @@ public class Board extends Observable {
      */
     public int calculateCornerPoints(int row, int column) {
         int sum = 0;
-        if (isCornerSpace(row, column).equals("TOP_LEFT")) {
-            sum += board[0][1].getNumber();
-            sum += board[1][1].getNumber();
-            sum += board[1][0].getNumber();
-            return sum % 10;
-        }
-        if (isCornerSpace(row, column).equals("BOTTOM_RIGHT")) {
-            sum += board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].getNumber();
-            sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].getNumber();
-            sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].getNumber();
-            return sum % 10;
-        }
-        if (isCornerSpace(row, column).equals("BOTTOM_LEFT")) {
-            sum += board[NUMBER_OF_ROWS - 2][0].getNumber();
-            sum += board[NUMBER_OF_ROWS - 2][1].getNumber();
-            sum += board[NUMBER_OF_ROWS - 1][1].getNumber();
-            return sum % 10;
-        }
-        if (isCornerSpace(row, column).equals("TOP_RIGHT")) {
-            sum += board[0][NUMBER_OF_COLUMNS - 1].getNumber();
-            sum += board[1][NUMBER_OF_COLUMNS - 2].getNumber();
-            sum += board[1][NUMBER_OF_COLUMNS - 1].getNumber();
-            return sum % 10;
+        String isCorner = isCornerSpace(row, column);
+        switch (isCorner) {
+            case "TOP_LEFT":
+                sum += board[0][1].getNumber();
+                sum += board[1][1].getNumber();
+                sum += board[1][0].getNumber();
+                return sum % 10;
+            case "BOTTOM_RIGHT":
+                sum += board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].getNumber();
+                sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].getNumber();
+                sum += board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].getNumber();
+                return sum % 10;
+            case "BOTTOM_LEFT":
+                sum += board[NUMBER_OF_ROWS - 2][0].getNumber();
+                sum += board[NUMBER_OF_ROWS - 2][1].getNumber();
+                sum += board[NUMBER_OF_ROWS - 1][1].getNumber();
+                return sum % 10;
+            case "TOP_RIGHT":
+                sum += board[0][NUMBER_OF_COLUMNS - 1].getNumber();
+                sum += board[1][NUMBER_OF_COLUMNS - 2].getNumber();
+                sum += board[1][NUMBER_OF_COLUMNS - 1].getNumber();
+                return sum % 10;
+            default:
+                break;
         }
         return sum;
     }
 
 
-    public void removeCornerTiles(int row, int column) {
+    public int removeCornerTiles(int row, int column) {
         board[row][column].emptyTile();
+        int removed = 0;
+        String isCorner = isCornerSpace(row, column);
+        switch (isCorner) {
+            case "TOP_LEFT":
+                if (board[0][1].isOccupied()) {
+                    board[0][1].emptyTile();
+                    removed++;
+                }
+                if (board[1][0].isOccupied()) {
+                    board[1][0].emptyTile();
+                    removed++;
+                }
+                if (board[1][1].isOccupied()) {
+                    board[1][1].emptyTile();
+                    removed++;
+                }
+                break;
+            case "BOTTOM_RIGHT":
+                if (board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].isOccupied()) {
+                    board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].emptyTile();
+                    removed++;
+                }
+                if (board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].isOccupied()) {
+                    board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].emptyTile();
+                    removed++;
+                }
+                if (board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].isOccupied()) {
+                    board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].emptyTile();
+                    removed++;
+                }
+                break;
+            case "BOTTOM_LEFT":
+                if (board[NUMBER_OF_ROWS - 2][0].isOccupied()) {
+                    board[NUMBER_OF_ROWS - 2][0].emptyTile();
+                    removed++;
+                }
+                if (board[NUMBER_OF_ROWS - 2][1].isOccupied()) {
+                    board[NUMBER_OF_ROWS - 2][1].emptyTile();
+                    removed++;
+                }
+                if (board[NUMBER_OF_ROWS - 1][1].isOccupied()) {
+                    board[NUMBER_OF_ROWS - 1][1].emptyTile();
+                    removed++;
+                }
+                break;
+            case "TOP_RIGHT":
+                if (board[0][NUMBER_OF_COLUMNS - 1].isOccupied()) {
+                    board[0][NUMBER_OF_COLUMNS - 1].emptyTile();
+                    removed++;
+                }
+                if (board[1][NUMBER_OF_COLUMNS - 2].isOccupied()) {
+                    board[1][NUMBER_OF_COLUMNS - 2].emptyTile();
+                    removed++;
+                }
+                if (board[1][NUMBER_OF_COLUMNS - 1].isOccupied()) {
+                    board[1][NUMBER_OF_COLUMNS - 1].emptyTile();
+                    removed++;
+                }
+                break;
+            default:
+                break;
+        }
+        if (removed >= 3) {
+            return removed;
+        } else {
+            return 0;
+        }
 
-        if (isCornerSpace(row, column).equals("TOP_LEFT")) {
-            board[0][1].emptyTile();
-            board[1][0].emptyTile();
-            board[1][1].emptyTile();
-            tilesRemoved += 3;
-        }
-        if (isCornerSpace(row, column).equals("BOTTOM_RIGHT")) {
-            board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].emptyTile();
-            board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].emptyTile();
-            board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].emptyTile();
-            tilesRemoved += 3;
-        }
-        if (isCornerSpace(row, column).equals("BOTTOM_LEFT")) {
-            board[NUMBER_OF_ROWS - 2][0].emptyTile();
-            board[NUMBER_OF_ROWS - 2][1].emptyTile();
-            board[NUMBER_OF_ROWS - 1][1].emptyTile();
-            tilesRemoved += 3;
-        }
-        if (isCornerSpace(row, column).equals("TOP_RIGHT")) {
-            board[0][NUMBER_OF_COLUMNS - 1].emptyTile();
-            board[1][NUMBER_OF_COLUMNS - 2].emptyTile();
-            board[1][NUMBER_OF_COLUMNS - 1].emptyTile();
-            tilesRemoved += 3;
-        }
     }
 
     private boolean isModulo(int row, int column, int surroundingTileSummation) {
         return board[row][column].getNumber() == surroundingTileSummation;
     }
 
-    public int getScore() { return tilesRemoved * 10; }
+    public int getScore() {
+        return score;
+    }
 }
 
 
