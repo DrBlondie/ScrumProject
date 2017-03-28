@@ -53,7 +53,6 @@ public class Board extends Observable {
 
             if (isModulo(row, column, surroundingTileSummation)) {
                 removeCornerTiles(row, column);
-                tilesRemoved += 3;
             }
 
             NUMBER_OF_MOVES++;
@@ -122,21 +121,25 @@ public class Board extends Observable {
             board[0][1].emptyTile();
             board[1][0].emptyTile();
             board[1][1].emptyTile();
+            tilesRemoved += 3;
         }
         if (isCornerSpace(row, column).equals("BOTTOM_RIGHT")) {
             board[NUMBER_OF_ROWS - 1][NUMBER_OF_COLUMNS - 2].emptyTile();
             board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 2].emptyTile();
             board[NUMBER_OF_ROWS - 2][NUMBER_OF_COLUMNS - 1].emptyTile();
+            tilesRemoved += 3;
         }
         if (isCornerSpace(row, column).equals("BOTTOM_LEFT")) {
             board[NUMBER_OF_ROWS - 2][0].emptyTile();
             board[NUMBER_OF_ROWS - 2][1].emptyTile();
             board[NUMBER_OF_ROWS - 1][1].emptyTile();
+            tilesRemoved += 3;
         }
         if (isCornerSpace(row, column).equals("TOP_RIGHT")) {
             board[0][NUMBER_OF_COLUMNS - 1].emptyTile();
             board[1][NUMBER_OF_COLUMNS - 2].emptyTile();
             board[1][NUMBER_OF_COLUMNS - 1].emptyTile();
+            tilesRemoved += 3;
         }
     }
 
