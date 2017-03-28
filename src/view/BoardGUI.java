@@ -140,7 +140,7 @@ public class BoardGUI extends JFrame implements Observer {
                 //added redundant check for proper size
                 for (i = 0; i < _queue.size()&&i<queue.length; i++) {
                     queue[i].setText(_queue.get(i) + "");
-                    System.out.println(Board.NUMBER_OF_MOVES);
+
                 }
                 for(;i<queue.length;i++){
                     queue[i].setText("");
