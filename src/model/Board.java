@@ -35,7 +35,13 @@ public class Board extends Observable {
     public Tile[][] getBoard() {
         return board;
     }
-
+    public boolean isOccupied(int col, int row) {
+        if(board[col][row].isOccupied()){
+            return true;
+        }else {
+            return false;
+        }
+    }
     public void performMove(int col, int row) {
 
         if (NUMBER_OF_MOVES >= Main.MAX_MOVES) {

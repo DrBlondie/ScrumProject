@@ -4,21 +4,25 @@ import main.Main;
 import model.Tile;
 import model.Board;
 import model.TileQueue;
+import sun.swing.SwingAccessor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 public class BoardGUI extends JFrame implements Observer {
-    private JLabel movesLabel = new JLabel("");
+    protected static JLabel movesLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
-    private Font gameFont = new Font("SansSerif", Font.BOLD, 20);
 
     public BoardGUI() {
 
@@ -58,9 +62,9 @@ public class BoardGUI extends JFrame implements Observer {
         header.add(movesLabel);
         JLabel label = new JLabel("Sum Fun");
 
-        label.setFont(gameFont);
-        scoreTime.setFont(gameFont);
-        movesLabel.setFont(gameFont);
+        label.setFont(new Font("SansSerif", Font.BOLD, 20));
+        //JLabel scoreTime = new JLabel("Score: ");
+        scoreTime.setFont(new Font("SansSerif", Font.BOLD, 20));
         header.add(label);
         header.add(scoreTime);
         add(header, BorderLayout.PAGE_START);
@@ -73,6 +77,8 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 1;
         boardPanel.add(queueBox, c);
         add(boardPanel, BorderLayout.CENTER);
+
+
     }
 
     public void addObserver(Observable model) {
@@ -91,8 +97,27 @@ public class BoardGUI extends JFrame implements Observer {
             for (int x = 0; x < 9; x++) {
                 final Point boardPosition = new Point(x, y);
                 gameBoard[x][y] = Main.getNewTextField();
-                gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
-
+                gameBoard[x][y].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
+                        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
+                    }
+                });
+                gameBoard[x][y].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        if(Main.gameBoard.isOccupied(boardPosition.x,boardPosition.y)==false) {
+                            gameBoard[boardPosition.x][boardPosition.y].setBackground(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+                        }
+                    }
+                });
+                gameBoard[x][y].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        gameBoard[boardPosition.x][boardPosition.y].setBackground(null);
+                    }
+                });
                 c.gridx = x * 90;
                 c.gridy = y;
                 playField.add(gameBoard[x][y], c);
@@ -115,7 +140,6 @@ public class BoardGUI extends JFrame implements Observer {
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
-        queue[0].setBackground(Color.YELLOW);
     }
 
 
@@ -148,21 +172,10 @@ public class BoardGUI extends JFrame implements Observer {
 
 
             }
-            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.getMoves()));
+            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
             scoreTime.setText("Score: " + ((Board) o).getScore());
         }
 
     }
 
-}
-
-class MouseClick extends MouseAdapter{
-    private Point boardPosition;
-    public MouseClick(Point position){
-        boardPosition = position;
-    }
-    public void mouseClicked(MouseEvent e) {
-        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
-        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
-    }
 }
