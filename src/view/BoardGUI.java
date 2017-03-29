@@ -105,6 +105,8 @@ public class BoardGUI extends JFrame implements Observer {
                         Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
                         //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
 
+
+
                     }
                 });
                 gameBoard[x][y].addMouseListener(new MouseAdapter() {
