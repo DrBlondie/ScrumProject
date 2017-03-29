@@ -77,7 +77,7 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 1;
         boardPanel.add(queueBox, c);
         add(boardPanel, BorderLayout.CENTER);
-
+        setResizable(false);
 
     }
 
