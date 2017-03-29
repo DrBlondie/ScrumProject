@@ -8,8 +8,7 @@ import java.util.Observable;
 
 public class Board extends Observable {
 
-    public static int NUMBER_OF_MOVES = 0;
-    public int score = 0;
+    private int score = 0;
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
@@ -37,7 +36,7 @@ public class Board extends Observable {
 
     public void performMove(int col, int row) {
 
-        if (NUMBER_OF_MOVES >= Main.MAX_MOVES) {
+        if (TileQueue.getTileQueue().getPlacedTileCount() >= Main.MAX_MOVES) {
             return;
         } else {
             int surroundingTileSummation = -1;
@@ -57,7 +56,6 @@ public class Board extends Observable {
                 score += removeCornerTiles(col, row) * 10;
             }
 
-            NUMBER_OF_MOVES++;
             setChanged();
             notifyObservers();
         }

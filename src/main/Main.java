@@ -13,7 +13,7 @@ import java.awt.*;
  */
 public class Main {
 
-    public static final int MAX_MOVES = 50;
+    public static final int MAX_MOVES = 20;
     public static Board gameBoard = new Board();
     public static TileQueue queue = TileQueue.getTileQueue();
 
