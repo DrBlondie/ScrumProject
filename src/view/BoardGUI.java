@@ -8,10 +8,7 @@ import sun.swing.SwingAccessor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,7 +60,6 @@ public class BoardGUI extends JFrame implements Observer {
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        //JLabel scoreTime = new JLabel("Score: ");
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 20));
         header.add(label);
         header.add(scoreTime);
@@ -77,8 +73,6 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 1;
         boardPanel.add(queueBox, c);
         add(boardPanel, BorderLayout.CENTER);
-
-
     }
 
     public void addObserver(Observable model) {
@@ -97,13 +91,7 @@ public class BoardGUI extends JFrame implements Observer {
             for (int x = 0; x < 9; x++) {
                 final Point boardPosition = new Point(x, y);
                 gameBoard[x][y] = Main.getNewTextField();
-                gameBoard[x][y].addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
-                        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
-                    }
-                });
+                gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
 
                 c.gridx = x * 90;
                 c.gridy = y;
@@ -165,4 +153,15 @@ public class BoardGUI extends JFrame implements Observer {
 
     }
 
+}
+
+class MouseClick extends MouseAdapter{
+    private Point boardPosition;
+    public MouseClick(Point position){
+        boardPosition = position;
+    }
+    public void mouseClicked(MouseEvent e) {
+        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
+        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
+    }
 }
