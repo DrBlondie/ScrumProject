@@ -8,16 +8,12 @@ import sun.swing.SwingAccessor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 public class BoardGUI extends JFrame implements Observer {
-
     protected static JLabel movesLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
@@ -64,7 +60,6 @@ public class BoardGUI extends JFrame implements Observer {
         JLabel label = new JLabel("Sum Fun");
 
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        //JLabel scoreTime = new JLabel("Score: ");
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 20));
         header.add(label);
         header.add(scoreTime);
@@ -78,8 +73,6 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 1;
         boardPanel.add(queueBox, c);
         add(boardPanel, BorderLayout.CENTER);
-
-
     }
 
     public void addObserver(Observable model) {
@@ -87,7 +80,6 @@ public class BoardGUI extends JFrame implements Observer {
     }
 
     public void buildPlayField() {
-
         playField.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
@@ -99,13 +91,8 @@ public class BoardGUI extends JFrame implements Observer {
             for (int x = 0; x < 9; x++) {
                 final Point boardPosition = new Point(x, y);
                 gameBoard[x][y] = Main.getNewTextField();
-                gameBoard[x][y].addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
-                        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
-                    }
-                });
+                gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
+
                 c.gridx = x * 90;
                 c.gridy = y;
                 playField.add(gameBoard[x][y], c);
@@ -146,6 +133,7 @@ public class BoardGUI extends JFrame implements Observer {
                 for(;i<queue.length;i++){
                     queue[i].setText("");
                 }
+
         } else if (o.getClass().getSimpleName().equals("Board")) {
             Tile[][] _gameBoard = ((Board) o).getBoard();
             for (int y = 0; y < _gameBoard.length; y++) {
@@ -156,9 +144,24 @@ public class BoardGUI extends JFrame implements Observer {
                         gameBoard[x][y].setText("");
                     }
                 }
+
+
             }
             movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
             scoreTime.setText("Score: " + ((Board) o).getScore());
         }
+
+    }
+
+}
+
+class MouseClick extends MouseAdapter{
+    private Point boardPosition;
+    public MouseClick(Point position){
+        boardPosition = position;
+    }
+    public void mouseClicked(MouseEvent e) {
+        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
+        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
     }
 }
