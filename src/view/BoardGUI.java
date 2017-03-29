@@ -140,6 +140,7 @@ public class BoardGUI extends JFrame implements Observer {
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
+        queue[0].setBackground(Color.YELLOW);
     }
 
 
