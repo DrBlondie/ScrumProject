@@ -102,6 +102,8 @@ public class BoardGUI extends JFrame implements Observer {
                     public void mouseClicked(MouseEvent e) {
                         Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
                         //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
+                        queue[0].setBackground(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+
                     }
                 });
                 gameBoard[x][y].addMouseListener(new MouseAdapter() {
@@ -140,7 +142,7 @@ public class BoardGUI extends JFrame implements Observer {
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
-        queue[0].setBackground(Color.YELLOW);
+        queue[0].setBackground(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
     }
 
 
@@ -175,6 +177,7 @@ public class BoardGUI extends JFrame implements Observer {
             }
             movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
             scoreTime.setText("Score: " + ((Board) o).getScore());
+
         }
 
     }
