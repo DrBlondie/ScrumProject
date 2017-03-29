@@ -1,28 +1,24 @@
 package view;
 
 import main.Main;
-import main.Tile;
+import model.Tile;
 import model.Board;
 import model.TileQueue;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+import java.awt.event.*;
+import java.util.*;
 
 
 public class BoardGUI extends JFrame implements Observer {
-    protected static JLabel movesLabel = new JLabel("");
-    private JLabel score = new JLabel("");
+    private JLabel movesLabel = new JLabel("");
+    private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
+    private Font gameFont = new Font("SansSerif", Font.BOLD, 20);
 
     public BoardGUI() {
 
@@ -62,12 +58,11 @@ public class BoardGUI extends JFrame implements Observer {
         header.add(movesLabel);
         JLabel label = new JLabel("Sum Fun");
 
-        label.setFont(new Font("SansSerif", Font.BOLD, 30));
-        //JLabel scoreTime = new JLabel("Score: ");
-        score.setFont(new Font("SansSerif", Font.BOLD, 15));
-        movesLabel.setFont(new Font("SansSerif", Font.BOLD, 15));
+        label.setFont(gameFont);
+        scoreTime.setFont(gameFont);
+        movesLabel.setFont(gameFont);
         header.add(label);
-        header.add(score);
+        header.add(scoreTime);
         add(header, BorderLayout.PAGE_START);
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
@@ -78,8 +73,6 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 1;
         boardPanel.add(queueBox, c);
         add(boardPanel, BorderLayout.CENTER);
-
-
     }
 
     public void addObserver(Observable model) {
@@ -122,6 +115,7 @@ public class BoardGUI extends JFrame implements Observer {
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
+        queue[0].setBackground(Color.YELLOW);
     }
 
 
@@ -135,6 +129,7 @@ public class BoardGUI extends JFrame implements Observer {
                 //added redundant check for proper size
                 for (i = 0; i < _queue.size()&&i<queue.length; i++) {
                     queue[i].setText(_queue.get(i) + "");
+
                 }
                 for(;i<queue.length;i++){
                     queue[i].setText("");
@@ -153,8 +148,8 @@ public class BoardGUI extends JFrame implements Observer {
 
 
             }
-            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - TileQueue.getTileQueue().getPlacedTileCount()));
-            score.setText("Score: " + ((Board) o).getScore());
+            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.getMoves()));
+            scoreTime.setText("Score: " + ((Board) o).getScore());
         }
 
     }

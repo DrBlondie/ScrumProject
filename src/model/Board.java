@@ -1,14 +1,14 @@
 package model;
 
 import main.Main;
-import main.Tile;
 
 import java.util.Observable;
 
 
 public class Board extends Observable {
 
-    private int score = 0;
+    public static int NUMBER_OF_MOVES = 0;
+    public int score = 0;
     private Tile[][] board;
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
@@ -24,7 +24,9 @@ public class Board extends Observable {
             }
         }
     }
-
+    public static int getMoves(){
+        return NUMBER_OF_MOVES;
+    }
     public void startGame() {
         setChanged();
         notifyObservers();
@@ -36,7 +38,7 @@ public class Board extends Observable {
 
     public void performMove(int col, int row) {
 
-        if (TileQueue.getTileQueue().getPlacedTileCount() >= Main.MAX_MOVES) {
+        if (NUMBER_OF_MOVES >= Main.MAX_MOVES) {
             return;
         } else {
             int surroundingTileSummation = -1;
@@ -56,6 +58,7 @@ public class Board extends Observable {
                 score += removeCornerTiles(col, row) * 10;
             }
 
+            NUMBER_OF_MOVES++;
             setChanged();
             notifyObservers();
         }
