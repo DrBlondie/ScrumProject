@@ -40,7 +40,7 @@ public class Board extends Observable {
         if (NUMBER_OF_MOVES >= Main.MAX_MOVES) {
             return;
         } else {
-            int surroundingTileSummation = 0;
+            int surroundingTileSummation = -1;
             if (board[col][row].isOccupied()) {
                 return;
             }
@@ -53,8 +53,7 @@ public class Board extends Observable {
             board[col][row].setOccupied(true);
 
             if (isModulo(col, row, surroundingTileSummation)) {
-                if (board[col][row].getNumber() != 0 && isCornerSpace(col, row).equals("FALSE"))
-                    board[col][row].emptyTile();
+                board[col][row].emptyTile();
                 score += removeCornerTiles(col, row) * 10;
             }
 
