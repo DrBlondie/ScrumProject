@@ -15,6 +15,11 @@ public class Tile{
         return (int) (Math.random() * 10);
     }
 
+    public void emptyTile() {
+        number = 0;
+        isOccupied = false;
+    }
+
     public int getNumber() {
         return number;
     }
@@ -31,8 +36,5 @@ public class Tile{
         isOccupied = value;
     }
 
-    public void emptyTile() {
-        number = 0;
-        isOccupied = false;
-    }
+
 }

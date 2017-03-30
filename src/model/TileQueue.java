@@ -52,15 +52,6 @@ public class TileQueue extends Observable{
         numberQueue.add((int) (Math.random() * 10));
     }
 
-
-    public ArrayList<Integer> getQueue() {
-        return numberQueue;
-    }
-
-    public int getPlacedTileCount() {
-        return placedTileCount;
-    }
-
     public int placeTile() {
 
         if (placedTileCount < Main.MAX_MOVES - MAX_SIZE) {
@@ -72,4 +63,9 @@ public class TileQueue extends Observable{
         notifyObservers();
         return value;
     }
+
+    public ArrayList<Integer> getQueue() {
+        return numberQueue;
+    }
+
 }

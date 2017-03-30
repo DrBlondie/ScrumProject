@@ -1,10 +1,9 @@
 package view;
 
 import main.Main;
-import model.Tile;
 import model.Board;
+import model.Tile;
 import model.TileQueue;
-import sun.swing.SwingAccessor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 
 public class BoardGUI extends JFrame implements Observer {
@@ -106,21 +106,20 @@ public class BoardGUI extends JFrame implements Observer {
                         //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
 
 
-
                     }
                 });
                 gameBoard[x][y].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        if(Main.gameBoard.isOccupied(boardPosition.x,boardPosition.y)==false) {
-                            gameBoard[boardPosition.x][boardPosition.y].setBackground(new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+                        if (Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y) == false) {
+                            gameBoard[boardPosition.x][boardPosition.y].setBackground(new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256)));
                         }
                     }
                 });
                 gameBoard[x][y].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        gameBoard[boardPosition.x][boardPosition.y].setBackground(null);
+                        gameBoard[boardPosition.x][boardPosition.y].setBackground(Color.white);
                     }
                 });
                 c.gridx = x * 90;
@@ -156,14 +155,13 @@ public class BoardGUI extends JFrame implements Observer {
             ArrayList<Integer> _queue = ((TileQueue) o).getQueue();
             int i;
 
-                //added redundant check for proper size
-                for (i = 0; i < _queue.size()&&i<queue.length; i++) {
-                    queue[i].setText(_queue.get(i) + "");
+            for (i = 0; i < _queue.size() && i < queue.length; i++) {
+                queue[i].setText(_queue.get(i) + "");
 
-                }
-                for(;i<queue.length;i++){
-                    queue[i].setText("");
-                }
+            }
+            for (; i < queue.length; i++) {
+                queue[i].setText("");
+            }
 
         } else if (o.getClass().getSimpleName().equals("Board")) {
             Tile[][] _gameBoard = ((Board) o).getBoard();
@@ -178,11 +176,24 @@ public class BoardGUI extends JFrame implements Observer {
 
 
             }
-            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
-            scoreTime.setText("Score: " + ((Board) o).getScore());
+            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.getMoves()));
+            scoreTime.setText("Score: " + Board.getScore());
 
         }
 
     }
 
+    class MouseClick extends MouseAdapter {
+        private Point boardPosition;
+
+        public MouseClick(Point position) {
+            boardPosition = position;
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
+            //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
+        }
+
+    }
 }
