@@ -23,9 +23,10 @@ public class BoardGUI extends JFrame implements Observer {
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
+    private Color defaultColor = new Color(230,230,230);
 
     public BoardGUI() {
-
+        setBackground(defaultColor);
         setTitle("Sum Fun");
         setSize(800, 600);
         setMinimumSize(new Dimension(800, 600));
@@ -57,6 +58,7 @@ public class BoardGUI extends JFrame implements Observer {
         setJMenuBar(gameMenu);
 
         JPanel header = new JPanel();
+        header.setBackground(defaultColor);
         header.setLayout(new GridLayout(1, 3));
 
         header.add(movesLabel);
@@ -76,6 +78,7 @@ public class BoardGUI extends JFrame implements Observer {
         boardPanel.add(playField, c);
         c.gridx = 1;
         boardPanel.add(queueBox, c);
+        boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
 
@@ -97,6 +100,7 @@ public class BoardGUI extends JFrame implements Observer {
             for (int x = 0; x < 9; x++) {
                 final Point boardPosition = new Point(x, y);
                 gameBoard[x][y] = Main.getNewTextField();
+                gameBoard[x][y].setBackground(defaultColor);
 
                 gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
                 c.gridx = x * 90;
@@ -118,6 +122,7 @@ public class BoardGUI extends JFrame implements Observer {
         c.insets = new Insets(0, 0, 0, 0);
         for (int i = 0; i < queue.length; i++) {
             queue[i] = Main.getNewTextField();
+            queue[i].setBackground(defaultColor);
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
@@ -150,8 +155,6 @@ public class BoardGUI extends JFrame implements Observer {
                         gameBoard[x][y].setText("");
                     }
                 }
-
-
             }
             movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.getMoves()));
             scoreTime.setText("Score: " + Board.getScore());
@@ -169,10 +172,9 @@ public class BoardGUI extends JFrame implements Observer {
 
         public void mouseClicked(MouseEvent e) {
             Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
-            //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
         }
         public void mouseExited(MouseEvent e) {
-            gameBoard[boardPosition.x][boardPosition.y].setBackground(null);
+            gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
         }
         public void mouseEntered(MouseEvent e) {
             if (Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y) == false) {
