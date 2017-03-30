@@ -44,14 +44,14 @@ public class Board extends Observable {
         return board[col][row].isOccupied();
     }
 
-    public void performMove(int col, int row) {
+    public boolean performMove(int col, int row) {
 
         if (numberOfMoves >= Main.MAX_MOVES) {
-            return;
+            return false;
         } else {
             int surroundingTileSummation = -1;
             if (board[col][row].isOccupied()) {
-                return;
+                return false;
             }
             if (!isCornerSpace(col, row).equals("FALSE")) {
 
@@ -69,6 +69,7 @@ public class Board extends Observable {
             numberOfMoves++;
             setChanged();
             notifyObservers();
+            return true;
         }
 
     }

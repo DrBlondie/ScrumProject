@@ -171,7 +171,9 @@ public class BoardGUI extends JFrame implements Observer {
         }
 
         public void mouseClicked(MouseEvent e) {
-            Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
+            if(Main.gameBoard.performMove(boardPosition.x, boardPosition.y)){
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+            }
         }
         public void mouseExited(MouseEvent e) {
             gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
