@@ -1,18 +1,17 @@
 package model;
 
 import main.Main;
-import main.Tile;
 
 import java.util.Observable;
 
 
 public class Board extends Observable {
 
-    public static int NUMBER_OF_MOVES = 0;
-    public int score = 0;
+    private static final int NUMBER_OF_ROWS = 9;
+    private static final int NUMBER_OF_COLUMNS = 9;
+    private static int numberOfMoves;
+    private static int score;
     private Tile[][] board;
-    private int NUMBER_OF_ROWS = 9;
-    private int NUMBER_OF_COLUMNS = 9;
 
     public Board() {
         board = new Tile[NUMBER_OF_COLUMNS][NUMBER_OF_ROWS];
@@ -24,6 +23,16 @@ public class Board extends Observable {
                 }
             }
         }
+        numberOfMoves = 0;
+        score = 0;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static int getMoves(){
+        return numberOfMoves;
     }
 
     public void startGame() {
@@ -31,18 +40,18 @@ public class Board extends Observable {
         notifyObservers();
     }
 
-    public Tile[][] getBoard() {
-        return board;
+    public boolean isOccupied(int col, int row) {
+        return board[col][row].isOccupied();
     }
 
-    public void performMove(int col, int row) {
+    public boolean performMove(int col, int row) {
 
-        if (NUMBER_OF_MOVES >= Main.MAX_MOVES) {
-            return;
+        if (numberOfMoves >= Main.MAX_MOVES) {
+            return false;
         } else {
-            int surroundingTileSummation = 0;
+            int surroundingTileSummation = -1;
             if (board[col][row].isOccupied()) {
-                return;
+                return false;
             }
             if (!isCornerSpace(col, row).equals("FALSE")) {
 
@@ -53,14 +62,14 @@ public class Board extends Observable {
             board[col][row].setOccupied(true);
 
             if (isModulo(col, row, surroundingTileSummation)) {
-                if (board[col][row].getNumber() != 0 && isCornerSpace(col, row).equals("FALSE"))
-                    board[col][row].emptyTile();
+                board[col][row].emptyTile();
                 score += removeCornerTiles(col, row) * 10;
             }
 
-            NUMBER_OF_MOVES++;
+            numberOfMoves++;
             setChanged();
             notifyObservers();
+            return true;
         }
 
     }
@@ -68,7 +77,7 @@ public class Board extends Observable {
     /*
      Tests space to see if it is in the corner and returns the corner position if true, otherwise returns false
      */
-    public String isCornerSpace(int col, int row) {
+    private String isCornerSpace(int col, int row) {
         if (col == 0 && row == 0) {
             return "TOP_LEFT";
         }
@@ -87,7 +96,7 @@ public class Board extends Observable {
     /*
     Uses the board indices to get number values to corner tiles
      */
-    public int calculateCornerPoints(int col, int row) {
+    private int calculateCornerPoints(int col, int row) {
         int sum = 0;
         String isCorner = isCornerSpace(col, row);
         switch (isCorner) {
@@ -117,8 +126,7 @@ public class Board extends Observable {
         return sum;
     }
 
-
-    public int removeCornerTiles(int row, int col) {
+    private int removeCornerTiles(int row, int col) {
         int removed = 0;
         String isCorner = isCornerSpace(row, col);
         switch (isCorner) {
@@ -193,8 +201,8 @@ public class Board extends Observable {
         return board[col][row].getNumber() == surroundingTileSummation;
     }
 
-    public int getScore() {
-        return score;
+    public Tile[][] getBoard() {
+        return board;
     }
 }
 

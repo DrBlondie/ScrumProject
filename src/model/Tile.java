@@ -1,4 +1,4 @@
-package main;
+package model;
 
 
 public class Tile{
@@ -13,6 +13,11 @@ public class Tile{
 
     private int getRandomNumber() {
         return (int) (Math.random() * 10);
+    }
+
+    public void emptyTile() {
+        number = 0;
+        isOccupied = false;
     }
 
     public int getNumber() {
@@ -31,8 +36,5 @@ public class Tile{
         isOccupied = value;
     }
 
-    public void emptyTile() {
-        number = 0;
-        isOccupied = false;
-    }
+
 }

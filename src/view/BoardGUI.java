@@ -1,28 +1,32 @@
 package view;
 
 import main.Main;
-import main.Tile;
 import model.Board;
+import model.Tile;
 import model.TileQueue;
-import sun.swing.SwingAccessor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 
 public class BoardGUI extends JFrame implements Observer {
-    protected static JLabel movesLabel = new JLabel("");
+    private JLabel movesLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
+    private Color defaultColor = new Color(230,230,230);
 
     public BoardGUI() {
-
+        setBackground(defaultColor);
         setTitle("Sum Fun");
         setSize(800, 600);
         setMinimumSize(new Dimension(800, 600));
@@ -54,13 +58,15 @@ public class BoardGUI extends JFrame implements Observer {
         setJMenuBar(gameMenu);
 
         JPanel header = new JPanel();
+        header.setBackground(defaultColor);
         header.setLayout(new GridLayout(1, 3));
 
         header.add(movesLabel);
         JLabel label = new JLabel("Sum Fun");
 
-        label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        scoreTime.setFont(new Font("SansSerif", Font.BOLD, 20));
+        label.setFont(new Font("SansSerif", Font.BOLD, 32));
+        scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
+        movesLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         header.add(label);
         header.add(scoreTime);
         add(header, BorderLayout.PAGE_START);
@@ -72,7 +78,10 @@ public class BoardGUI extends JFrame implements Observer {
         boardPanel.add(playField, c);
         c.gridx = 1;
         boardPanel.add(queueBox, c);
+        boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
+        setResizable(false);
+
     }
 
     public void addObserver(Observable model) {
@@ -91,8 +100,9 @@ public class BoardGUI extends JFrame implements Observer {
             for (int x = 0; x < 9; x++) {
                 final Point boardPosition = new Point(x, y);
                 gameBoard[x][y] = Main.getNewTextField();
-                gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
+                gameBoard[x][y].setBackground(defaultColor);
 
+                gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
                 c.gridx = x * 90;
                 c.gridy = y;
                 playField.add(gameBoard[x][y], c);
@@ -112,9 +122,11 @@ public class BoardGUI extends JFrame implements Observer {
         c.insets = new Insets(0, 0, 0, 0);
         for (int i = 0; i < queue.length; i++) {
             queue[i] = Main.getNewTextField();
+            queue[i].setBackground(defaultColor);
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
+        queue[0].setBackground(Color.pink);
     }
 
 
@@ -125,14 +137,13 @@ public class BoardGUI extends JFrame implements Observer {
             ArrayList<Integer> _queue = ((TileQueue) o).getQueue();
             int i;
 
-                //added redundant check for proper size
-                for (i = 0; i < _queue.size()&&i<queue.length; i++) {
-                    queue[i].setText(_queue.get(i) + "");
+            for (i = 0; i < _queue.size() && i < queue.length; i++) {
+                queue[i].setText(_queue.get(i) + "");
 
-                }
-                for(;i<queue.length;i++){
-                    queue[i].setText("");
-                }
+            }
+            for (; i < queue.length; i++) {
+                queue[i].setText("");
+            }
 
         } else if (o.getClass().getSimpleName().equals("Board")) {
             Tile[][] _gameBoard = ((Board) o).getBoard();
@@ -144,24 +155,34 @@ public class BoardGUI extends JFrame implements Observer {
                         gameBoard[x][y].setText("");
                     }
                 }
-
-
             }
-            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.NUMBER_OF_MOVES));
-            scoreTime.setText("Score: " + ((Board) o).getScore());
+            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.getMoves()));
+            scoreTime.setText("Score: " + Board.getScore());
+
         }
 
     }
 
-}
+    class MouseClick extends MouseAdapter {
+        private Point boardPosition;
 
-class MouseClick extends MouseAdapter{
-    private Point boardPosition;
-    public MouseClick(Point position){
-        boardPosition = position;
-    }
-    public void mouseClicked(MouseEvent e) {
-        Main.gameBoard.performMove(boardPosition.x, boardPosition.y);
-        //GUI.movesLabel.setText("Number of moves left "+ (Main.maxMoves- NUMBER_OF_MOVES));*
+        public MouseClick(Point position) {
+            boardPosition = position;
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            if(Main.gameBoard.performMove(boardPosition.x, boardPosition.y)){
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+            }
+        }
+        public void mouseExited(MouseEvent e) {
+            gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+        }
+        public void mouseEntered(MouseEvent e) {
+            if (Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y) == false) {
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256)));
+            }
+        }
+
     }
 }
