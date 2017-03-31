@@ -115,7 +115,6 @@ public class BoardGUI extends JFrame implements Observer {
             c.gridy = i;
             queueBox.add(queue[i], c);
         }
-        queue[0].setBackground(Color.pink);
     }
 
 
@@ -169,7 +168,9 @@ public class BoardGUI extends JFrame implements Observer {
         }
         public void mouseEntered(MouseEvent e) {
             if (!Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y)) {
-                gameBoard[boardPosition.x][boardPosition.y].setBackground(new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256)));
+                Color randomColor = new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256));
+                queue[0].setBackground(randomColor);
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(randomColor);
             }
         }
 

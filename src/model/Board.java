@@ -57,7 +57,7 @@ public class Board extends Observable {
 
             if (isModulo(col, row, surroundingTileSummation)) {
                 board[col][row].emptyTile();
-                score += removeCornerTiles(col, row) * 10;
+                removeCornerTiles(col, row);
             }
 
             numberOfMoves++;
