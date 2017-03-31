@@ -40,8 +40,6 @@ public class BoardGUI extends JFrame implements Observer {
 
         JMenuBar gameMenu = new JMenuBar();
         JMenu game = new JMenu("Game");
-        JMenu scores = new JMenu("Scores");
-        JMenuItem startGame = new JMenuItem("Start New Game");
         JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(new ActionListener() {
             @Override
@@ -49,12 +47,8 @@ public class BoardGUI extends JFrame implements Observer {
                 System.exit(0);
             }
         });
-        JMenuItem viewScores = new JMenuItem("Leader Scoreboard");
-        game.add(startGame);
         game.add(exit);
-        scores.add(viewScores);
         gameMenu.add(game);
-        gameMenu.add(scores);
         setJMenuBar(gameMenu);
 
         JPanel header = new JPanel();

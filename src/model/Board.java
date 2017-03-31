@@ -14,6 +14,7 @@ public class Board extends Observable {
     private Tile[][] board;
 
     public Board() {
+
         board = new Tile[NUMBER_OF_COLUMNS][NUMBER_OF_ROWS];
         for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
             for (int j = 0; j < NUMBER_OF_ROWS; j++) {
@@ -23,16 +24,9 @@ public class Board extends Observable {
                 }
             }
         }
+
         numberOfMoves = 0;
         score = 0;
-    }
-
-    public static int getScore() {
-        return score;
-    }
-
-    public static int getMoves(){
-        return numberOfMoves;
     }
 
     public void startGame() {
@@ -199,6 +193,15 @@ public class Board extends Observable {
 
     private boolean isModulo(int col, int row, int surroundingTileSummation) {
         return board[col][row].getNumber() == surroundingTileSummation;
+    }
+
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static int getMoves(){
+        return numberOfMoves;
     }
 
     public Tile[][] getBoard() {

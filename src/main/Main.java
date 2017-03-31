@@ -15,7 +15,7 @@ public class Main {
 
     public static final int MAX_MOVES = 50;
     public static Board gameBoard = new Board();
-    public static TileQueue queue = TileQueue.getTileQueue();
+    public static TileQueue queue;
 
     public static void main(String[] args){
         startGame();
@@ -41,14 +41,14 @@ public class Main {
      */
     public static JTextField getNewTextField(){
 
-        Border b = BorderFactory.createLineBorder(Color.black);
-        JTextField t = new JTextField();
-        t.setEditable(false);
-        t.setPreferredSize(new Dimension(50, 50));
-        t.setBorder(b);
-        t.setHorizontalAlignment(JTextField.CENTER);
-        t.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, 16));
-        return t;
+        Border gameBorder = BorderFactory.createLineBorder(Color.black);
+        JTextField textField = new JTextField();
+        textField.setEditable(false);
+        textField.setPreferredSize(new Dimension(50, 50));
+        textField.setBorder(gameBorder);
+        textField.setHorizontalAlignment(JTextField.CENTER);
+        textField.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, 16));
+        return textField;
     }
 
 }

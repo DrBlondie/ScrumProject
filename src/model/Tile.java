@@ -7,6 +7,7 @@ public class Tile{
     private boolean isOccupied;
 
     public Tile() {
+
         isOccupied = true;
         number = getRandomNumber();
     }

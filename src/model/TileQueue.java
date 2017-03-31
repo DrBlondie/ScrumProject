@@ -21,13 +21,6 @@ public class TileQueue extends Observable{
         placedTileCount = 0;
     }
 
-    public static TileQueue getTileQueue() {
-        if (gameQueue == null) {
-            gameQueue = new TileQueue();
-        }
-        return gameQueue;
-    }
-
     public void startGame() {
         setChanged();
         notifyObservers();
@@ -63,6 +56,14 @@ public class TileQueue extends Observable{
         notifyObservers();
         return value;
     }
+
+    public static TileQueue getTileQueue() {
+        if (gameQueue == null) {
+            gameQueue = new TileQueue();
+        }
+        return gameQueue;
+    }
+
 
     public ArrayList<Integer> getQueue() {
         return numberQueue;
