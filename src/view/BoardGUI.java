@@ -30,7 +30,7 @@ public class BoardGUI extends JFrame implements Observer {
         setTitle("Sum Fun");
         setSize(800, 600);
         setMinimumSize(new Dimension(800, 600));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         buildPlayField();
         buildQueueBox();
         GridBagConstraints c = new GridBagConstraints();
@@ -41,12 +41,7 @@ public class BoardGUI extends JFrame implements Observer {
         JMenuBar gameMenu = new JMenuBar();
         JMenu game = new JMenu("Game");
         JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        exit.addActionListener(e -> System.exit(0));
         game.add(exit);
         gameMenu.add(game);
         setJMenuBar(gameMenu);
@@ -82,7 +77,7 @@ public class BoardGUI extends JFrame implements Observer {
         model.addObserver(this);
     }
 
-    public void buildPlayField() {
+    private void buildPlayField() {
         playField.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
@@ -105,7 +100,7 @@ public class BoardGUI extends JFrame implements Observer {
     }
 
 
-    public void buildQueueBox() {
+    private void buildQueueBox() {
 
         queueBox.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -173,7 +168,7 @@ public class BoardGUI extends JFrame implements Observer {
             gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
         }
         public void mouseEntered(MouseEvent e) {
-            if (Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y) == false) {
+            if (!Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256)));
             }
         }
