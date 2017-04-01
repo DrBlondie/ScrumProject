@@ -168,7 +168,7 @@ public class BoardGUI extends JFrame implements Observer {
         }
         public void mouseEntered(MouseEvent e) {
             if (!Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y)) {
-                Color randomColor = new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256));
+                Color randomColor = new Color((int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127));
                 queue[0].setBackground(randomColor);
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(randomColor);
             }
