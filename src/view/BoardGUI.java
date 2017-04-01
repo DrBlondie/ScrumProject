@@ -28,8 +28,8 @@ public class BoardGUI extends JFrame implements Observer {
     public BoardGUI() {
         setBackground(defaultColor);
         setTitle("Sum Fun");
-        setSize(800, 600);
-        setMinimumSize(new Dimension(800, 600));
+        setSize(600, 600);
+
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         buildPlayField();
         buildQueueBox();
@@ -48,25 +48,33 @@ public class BoardGUI extends JFrame implements Observer {
 
         JPanel header = new JPanel();
         header.setBackground(defaultColor);
-        header.setLayout(new GridLayout(1, 3));
+        header.setLayout(new GridLayout(2,4 ));
 
-        header.add(movesLabel);
-        JLabel label = new JLabel("Sum Fun");
 
-        label.setFont(new Font("SansSerif", Font.BOLD, 32));
+
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
         movesLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        header.add(label);
+
+
+        header.add(new JLabel());
+        header.add(new JLabel());
+        header.add(new JLabel());
+        header.add(new JLabel());
+
+        header.add(new JLabel());
         header.add(scoreTime);
-        add(header, BorderLayout.PAGE_START);
+        header.add(movesLabel);
+        header.add(new JLabel());
+
+        add(header, BorderLayout.NORTH);
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
         c.gridx = 0;
         c.gridwidth = 1;
-        c.insets = new Insets(0, 0, 0, 50);
-        boardPanel.add(playField, c);
+        c.insets = new Insets(0, 0, 0, 33);
+        boardPanel.add(playField,c);
         c.gridx = 1;
-        boardPanel.add(queueBox, c);
+        boardPanel.add(queueBox);
         boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
@@ -144,7 +152,7 @@ public class BoardGUI extends JFrame implements Observer {
                     }
                 }
             }
-            movesLabel.setText("Number of moves left: " + (Main.MAX_MOVES - Board.getMoves()));
+            movesLabel.setText("Moves left: " + (Main.MAX_MOVES - Board.getMoves()));
             scoreTime.setText("Score: " + Board.getScore());
 
         }
