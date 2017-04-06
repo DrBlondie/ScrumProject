@@ -9,12 +9,13 @@ public class Board extends Observable {
 
     private static final int NUMBER_OF_ROWS = 9;
     private static final int NUMBER_OF_COLUMNS = 9;
-    private static int numberOfMoves;
-    private static int score;
+    private int numberOfMoves;
+    private int score;
     private Tile[][] board;
+    private TileQueue currentQueue;
 
-    public Board() {
-
+    public Board(TileQueue queue) {
+        currentQueue = queue;
         board = new Tile[NUMBER_OF_COLUMNS][NUMBER_OF_ROWS];
         for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
             for (int j = 0; j < NUMBER_OF_ROWS; j++) {
@@ -52,7 +53,7 @@ public class Board extends Observable {
                 surroundingTileSummation = calculateCornerPoints(col, row);
             }
 
-            board[col][row].setNumber(TileQueue.getTileQueue().placeTile());
+            board[col][row].setNumber(currentQueue.placeTile());
             board[col][row].setOccupied(true);
 
             if (isModulo(col, row, surroundingTileSummation)) {
@@ -196,11 +197,11 @@ public class Board extends Observable {
     }
 
 
-    public static int getScore() {
+    public int getScore() {
         return score;
     }
 
-    public static int getMoves(){
+    public int getMoves() {
         return numberOfMoves;
     }
 

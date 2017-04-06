@@ -9,11 +9,10 @@ import main.Main;
 public class TileQueue extends Observable{
 
     private static final int MAX_SIZE = 5;
-    private static TileQueue gameQueue;
-    private static ArrayList<Integer> numberQueue = new ArrayList<>();
+    private ArrayList<Integer> numberQueue = new ArrayList<>();
     private int placedTileCount;
 
-    private TileQueue() {
+    public TileQueue() {
 
         for (int i = 0; i < MAX_SIZE; i++) {
 
@@ -58,12 +57,6 @@ public class TileQueue extends Observable{
         return value;
     }
 
-    public static TileQueue getTileQueue() {
-        if (gameQueue == null) {
-            gameQueue = new TileQueue();
-        }
-        return gameQueue;
-    }
 
 
     public ArrayList<Integer> getQueue() {
