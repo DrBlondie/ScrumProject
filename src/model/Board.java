@@ -1,8 +1,8 @@
 package model;
 
+import java.util.Observable;
 import main.Main;
 
-import java.util.Observable;
 
 
 public class Board extends Observable {

@@ -6,7 +6,7 @@ public class Tile{
     private int number;
     private boolean isOccupied;
 
-    public Tile() {
+    Tile() {
 
         isOccupied = true;
         number = getRandomNumber();
@@ -16,7 +16,7 @@ public class Tile{
         return (int) (Math.random() * 10);
     }
 
-    public void emptyTile() {
+    void emptyTile() {
         number = 0;
         isOccupied = false;
     }
@@ -25,7 +25,7 @@ public class Tile{
         return number;
     }
 
-    public void setNumber(int number) {
+    void setNumber(int number) {
         this.number = number;
     }
 
@@ -33,7 +33,7 @@ public class Tile{
         return isOccupied;
     }
 
-    public void setOccupied(boolean value) {
+    void setOccupied(boolean value) {
         isOccupied = value;
     }
 

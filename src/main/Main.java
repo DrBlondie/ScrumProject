@@ -1,39 +1,31 @@
 package main;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 import model.Board;
 import model.TileQueue;
-import view.BoardGUI;
+import view.BoardView;
 
-import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
 
-/**
- * Created by Alex New on 3/25/2017.
- */
 public class Main {
 
     public static final int MAX_MOVES = 50;
     public static Board gameBoard = new Board();
-    public static TileQueue queue;
 
     public static void main(String[] args){
-        startGame();
-    }
-
-    /***
-     * Starts the game
-     */
-    public static void startGame(){
-        queue = TileQueue.getTileQueue();
-        BoardGUI gameBoardGUI = new BoardGUI();
-        gameBoardGUI.addObserver(gameBoard);
-        gameBoardGUI.addObserver(queue);
+        TileQueue queue = TileQueue.getTileQueue();
+        BoardView gameBoardView = new BoardView();
+        gameBoardView.addObserver(gameBoard);
+        gameBoardView.addObserver(queue);
         queue.startGame();
         gameBoard.startGame();
-        gameBoardGUI.setVisible(true);
-
+        gameBoardView.setVisible(true);
     }
+
 
     /***
      * Creates a JTextField that is used to hold information for each Tile

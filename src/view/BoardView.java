@@ -1,31 +1,42 @@
 package view;
 
-import main.Main;
-import model.Board;
-import model.Tile;
-import model.TileQueue;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import main.Main;
+import model.Board;
+import model.Tile;
+import model.TileQueue;
 
 
-public class BoardGUI extends JFrame implements Observer {
+public class BoardView extends JFrame implements Observer {
     private JLabel movesLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
-    private Color defaultColor = new Color(230,230,230);
+    private Color defaultColor = new Color(230, 230, 230);
 
-    public BoardGUI() {
+    public BoardView() {
         setBackground(defaultColor);
         setTitle("Sum Fun");
         setSize(600, 600);
@@ -48,8 +59,7 @@ public class BoardGUI extends JFrame implements Observer {
 
         JPanel header = new JPanel();
         header.setBackground(defaultColor);
-        header.setLayout(new GridLayout(2,4 ));
-
+        header.setLayout(new GridLayout(2, 4));
 
 
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -72,7 +82,7 @@ public class BoardGUI extends JFrame implements Observer {
         c.gridx = 0;
         c.gridwidth = 1;
         c.insets = new Insets(0, 0, 0, 33);
-        boardPanel.add(playField,c);
+        boardPanel.add(playField, c);
         c.gridx = 1;
         boardPanel.add(queueBox);
         boardPanel.setBackground(defaultColor);
@@ -130,11 +140,11 @@ public class BoardGUI extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
 
         if (o.getClass().getSimpleName().equals("TileQueue")) {
-            ArrayList<Integer> _queue = ((TileQueue) o).getQueue();
+            ArrayList<Integer> numberQueue = ((TileQueue) o).getQueue();
             int i;
 
-            for (i = 0; i < _queue.size() && i < queue.length; i++) {
-                queue[i].setText(_queue.get(i) + "");
+            for (i = 0; i < numberQueue.size() && i < queue.length; i++) {
+                queue[i].setText(numberQueue.get(i) + "");
 
             }
             for (; i < queue.length; i++) {
@@ -142,13 +152,13 @@ public class BoardGUI extends JFrame implements Observer {
             }
 
         } else if (o.getClass().getSimpleName().equals("Board")) {
-            Tile[][] _gameBoard = ((Board) o).getBoard();
-            for (int y = 0; y < _gameBoard.length; y++) {
-                for (int x = 0; x < _gameBoard[y].length; x++) {
-                    if (_gameBoard[x][y].isOccupied()) {
-                        gameBoard[x][y].setText(_gameBoard[x][y].getNumber() + "");
+            Tile[][] gameBoard = ((Board) o).getBoard();
+            for (int y = 0; y < gameBoard.length; y++) {
+                for (int x = 0; x < gameBoard[y].length; x++) {
+                    if (gameBoard[x][y].isOccupied()) {
+                        this.gameBoard[x][y].setText(gameBoard[x][y].getNumber() + "");
                     } else {
-                        gameBoard[x][y].setText("");
+                        this.gameBoard[x][y].setText("");
                     }
                 }
             }
@@ -159,21 +169,23 @@ public class BoardGUI extends JFrame implements Observer {
 
     }
 
-    class MouseClick extends MouseAdapter {
+    private class MouseClick extends MouseAdapter {
         private Point boardPosition;
 
-        public MouseClick(Point position) {
+        MouseClick(Point position) {
             boardPosition = position;
         }
 
         public void mouseClicked(MouseEvent e) {
-            if(Main.gameBoard.performMove(boardPosition.x, boardPosition.y)){
+            if (Main.gameBoard.performMove(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
             }
         }
+
         public void mouseExited(MouseEvent e) {
             gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
         }
+
         public void mouseEntered(MouseEvent e) {
             if (!Main.gameBoard.isOccupied(boardPosition.x, boardPosition.y)) {
                 Color randomColor = new Color((int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127));

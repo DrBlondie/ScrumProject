@@ -1,9 +1,10 @@
 package model;
 
-import main.Main;
-
 import java.util.ArrayList;
 import java.util.Observable;
+
+import main.Main;
+
 
 public class TileQueue extends Observable{
 
@@ -45,7 +46,7 @@ public class TileQueue extends Observable{
         numberQueue.add((int) (Math.random() * 10));
     }
 
-    public int placeTile() {
+    int placeTile() {
 
         if (placedTileCount < Main.MAX_MOVES - MAX_SIZE) {
             enqueue();
