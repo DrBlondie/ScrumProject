@@ -40,6 +40,7 @@ public class BoardView extends JFrame implements Observer {
     private Color defaultColor = new Color(230, 230, 230);
     private Board currentBoard = null;
     private TileQueue currentQueue = null;
+    private boolean isTimed = false;
 
     public BoardView() {
         setBackground(defaultColor);
@@ -205,7 +206,6 @@ public class BoardView extends JFrame implements Observer {
         }
 
         public void mouseClicked(MouseEvent e) {
-
             if (currentBoard.performMove(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
             }
