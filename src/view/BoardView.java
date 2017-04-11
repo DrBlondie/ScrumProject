@@ -28,6 +28,7 @@ import javax.swing.border.Border;
 import model.Game;
 import model.Tile;
 import model.TileQueue;
+import model.TimedGame;
 import model.UntimedGame;
 
 
@@ -100,13 +101,13 @@ public class BoardView extends JFrame implements Observer {
     public void newGame(Boolean isTimed) {
         currentQueue = new TileQueue();
         if (isTimed) {
-            currentBoard = new UntimedGame(currentQueue);
+            currentBoard = new TimedGame(currentQueue);
         } else {
             currentBoard = new UntimedGame(currentQueue);
         }
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
-        currentBoard.startGame();
+        currentBoard.updateGame();
         currentQueue.startGame();
     }
 
@@ -211,7 +212,7 @@ public class BoardView extends JFrame implements Observer {
         }
 
         public void mouseClicked(MouseEvent e) {
-            if (currentBoard.performMove(boardPosition.x, boardPosition.y)) {
+            if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
             }
         }

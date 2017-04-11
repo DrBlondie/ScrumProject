@@ -29,7 +29,7 @@ public abstract class Game extends Observable {
         score = 0;
     }
 
-    public void startGame() {
+    public void updateGame() {
         setChanged();
         notifyObservers();
     }
@@ -39,7 +39,7 @@ public abstract class Game extends Observable {
     }
 
 
-    public boolean performMove(int col, int row) {
+    boolean performMove(int col, int row) {
 
 
         int surroundingTileSummation = -1;
