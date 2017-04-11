@@ -24,23 +24,23 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
-import main.Main;
-import model.Board;
+
+import model.Game;
 import model.Tile;
 import model.TileQueue;
+import model.UntimedGame;
 
 
 public class BoardView extends JFrame implements Observer {
-    private JLabel movesLabel = new JLabel("");
+    private JLabel gameLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
     private JTextField[] queue = new JTextField[5];
     private Color defaultColor = new Color(230, 230, 230);
-    private Board currentBoard = null;
+    private Game currentBoard = null;
     private TileQueue currentQueue = null;
-    private boolean isTimed = false;
 
     public BoardView() {
         setBackground(defaultColor);
@@ -69,7 +69,7 @@ public class BoardView extends JFrame implements Observer {
 
 
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
-        movesLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        gameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 
 
         header.add(new JLabel());
@@ -79,7 +79,7 @@ public class BoardView extends JFrame implements Observer {
 
         header.add(new JLabel());
         header.add(scoreTime);
-        header.add(movesLabel);
+        header.add(gameLabel);
         header.add(new JLabel());
 
         add(header, BorderLayout.NORTH);
@@ -99,7 +99,11 @@ public class BoardView extends JFrame implements Observer {
 
     public void newGame(Boolean isTimed) {
         currentQueue = new TileQueue();
-        currentBoard = new Board(currentQueue);
+        if (isTimed) {
+            currentBoard = new UntimedGame(currentQueue);
+        } else {
+            currentBoard = new UntimedGame(currentQueue);
+        }
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
         currentBoard.startGame();
@@ -162,7 +166,7 @@ public class BoardView extends JFrame implements Observer {
                 queue[i].setText("");
             }
 
-        } else if (currentBoard != null && o.getClass().getSimpleName().equals("Board")) {
+        } else if (currentBoard != null && o.getClass().getSimpleName().contains("Game")) {
 
             Tile[][] gameBoard = currentBoard.getBoard();
             for (int y = 0; y < gameBoard.length; y++) {
@@ -174,7 +178,8 @@ public class BoardView extends JFrame implements Observer {
                     }
                 }
             }
-            movesLabel.setText("Moves left: " + (Main.MAX_MOVES - currentBoard.getMoves()));
+
+            gameLabel.setText(currentBoard.getGameValue());
             scoreTime.setText("Score: " + currentBoard.getScore());
 
         }

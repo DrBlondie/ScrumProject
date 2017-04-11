@@ -1,20 +1,21 @@
 package model;
 
 import java.util.Observable;
-import main.Main;
 
 
-
-public class Board extends Observable {
+public abstract class Game extends Observable {
 
     private static final int NUMBER_OF_ROWS = 9;
     private static final int NUMBER_OF_COLUMNS = 9;
-    private int numberOfMoves;
     private int score;
     private Tile[][] board;
     private TileQueue currentQueue;
 
-    public Board(TileQueue queue) {
+    public Game() {
+        this(new TileQueue());
+    }
+
+    Game(TileQueue queue) {
         currentQueue = queue;
         board = new Tile[NUMBER_OF_COLUMNS][NUMBER_OF_ROWS];
         for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
@@ -25,8 +26,6 @@ public class Board extends Observable {
                 }
             }
         }
-
-        numberOfMoves = 0;
         score = 0;
     }
 
@@ -39,34 +38,30 @@ public class Board extends Observable {
         return board[col][row].isOccupied();
     }
 
+
     public boolean performMove(int col, int row) {
 
-        if (numberOfMoves >= Main.MAX_MOVES) {
+
+        int surroundingTileSummation = -1;
+        if (board[col][row].isOccupied()) {
             return false;
-        } else {
-            int surroundingTileSummation = -1;
-            if (board[col][row].isOccupied()) {
-                return false;
-            }
-            if (!isCornerSpace(col, row).equals("FALSE")) {
+        }
+        if (!isCornerSpace(col, row).equals("FALSE")) {
 
-                surroundingTileSummation = calculateCornerPoints(col, row);
-            }
-
-            board[col][row].setNumber(currentQueue.placeTile());
-            board[col][row].setOccupied(true);
-
-            if (isModulo(col, row, surroundingTileSummation)) {
-                board[col][row].emptyTile();
-                removeCornerTiles(col, row);
-            }
-
-            numberOfMoves++;
-            setChanged();
-            notifyObservers();
-            return true;
+            surroundingTileSummation = calculateCornerPoints(col, row);
         }
 
+        board[col][row].setNumber(currentQueue.placeTile());
+        board[col][row].setOccupied(true);
+
+        if (isModulo(col, row, surroundingTileSummation)) {
+            board[col][row].emptyTile();
+            removeCornerTiles(col, row);
+        }
+
+        setChanged();
+        notifyObservers();
+        return true;
     }
 
     /*
@@ -201,13 +196,13 @@ public class Board extends Observable {
         return score;
     }
 
-    public int getMoves() {
-        return numberOfMoves;
-    }
-
     public Tile[][] getBoard() {
         return board;
     }
+
+    public abstract String getGameValue();
+
+    public abstract boolean checkMove(int col, int row);
 }
 
 
