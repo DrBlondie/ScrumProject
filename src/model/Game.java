@@ -48,7 +48,7 @@ public abstract class Game extends Observable {
             board[col][row].setOccupied(true);
             if (isModulo(col, row, surroundingTileSummation)) {
                 board[col][row].emptyTile();
-                removeCornerTiles(col, row);
+                score += removeCornerTiles(col, row);
             }
         } else if (!isBorderSpace(col, row).equals("FALSE")) {
             surroundingTileSummation = calculateBorderPoints(col, row);
@@ -56,9 +56,17 @@ public abstract class Game extends Observable {
             board[col][row].setOccupied(true);
             if (isModulo(col, row, surroundingTileSummation)) {
                 board[col][row].emptyTile();
-                removeBorderTiles(col, row);
+                score += removeBorderTiles(col, row);
             }
 
+        }else{
+            surroundingTileSummation = calculateInteriorPoints(col, row);
+            board[col][row].setNumber(currentQueue.placeTile());
+            board[col][row].setOccupied(true);
+            if(isModulo(col, row, surroundingTileSummation)){
+                board[col][row].emptyTile();
+                score += removeInteriorTiles(col, row);
+            }
         }
         setChanged();
         notifyObservers();
@@ -163,6 +171,63 @@ public abstract class Game extends Observable {
                 break;
         }
         return sum;
+    }
+
+    private int calculateInteriorPoints(int row, int col){
+        int sum = 0;
+
+        sum += board[row - 1][col - 1].getNumber();
+        sum += board[row - 1][col].getNumber();
+        sum += board[row - 1][col + 1].getNumber();
+        sum += board[row][col - 1].getNumber();
+        sum += board[row][col + 1].getNumber();
+        sum += board[row + 1][col - 1].getNumber();
+        sum += board[row + 1][col].getNumber();
+        sum += board[row + 1][col + 1].getNumber();
+
+        return sum;
+    }
+
+    private int removeInteriorTiles(int row, int col){
+        int removed = 0;
+        if (board[row - 1][col - 1].isOccupied()) {
+            board[row - 1][col - 1].emptyTile();
+            removed++;
+        }
+        if (board[row - 1][col].isOccupied()) {
+            board[row - 1][col].emptyTile();
+            removed++;
+        }
+        if (board[row - 1][col + 1].isOccupied()) {
+            board[row - 1][col + 1].emptyTile();
+            removed++;
+        }
+        if (board[row][col - 1].isOccupied()) {
+            board[row][col - 1].emptyTile();
+            removed++;
+        }
+        if (board[row][col + 1].isOccupied()) {
+            board[row][col + 1].emptyTile();
+            removed++;
+        }
+        if (board[row + 1][col - 1].isOccupied()) {
+            board[row + 1][col - 1].emptyTile();
+            removed++;
+        }
+        if (board[row + 1][col].isOccupied()) {
+            board[row + 1][col].emptyTile();
+            removed++;
+        }
+        if (board[row + 1][col + 1].isOccupied()) {
+            board[row + 1][col + 1].emptyTile();
+            removed++;
+        }
+
+        if(removed >= 3){
+            return removed;
+        }else{
+            return 0;
+        }
     }
 
     private int removeBorderTiles(int row, int col) {
@@ -340,8 +405,6 @@ public abstract class Game extends Observable {
     }
 
     private boolean isModulo(int row, int col, int surroundingTileSummation) {
-        System.out.println(board[row][col].getNumber());
-
         return board[row][col].getNumber() == (surroundingTileSummation % 10);
     }
 
