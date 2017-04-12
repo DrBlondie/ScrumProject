@@ -11,9 +11,6 @@ public abstract class Game extends Observable {
     private Tile[][] board;
     private TileQueue currentQueue;
 
-    public Game() {
-        this(new TileQueue());
-    }
 
     Game(TileQueue queue) {
         currentQueue = queue;
@@ -39,7 +36,7 @@ public abstract class Game extends Observable {
     }
 
 
-    public boolean performMove(int col, int row) {
+    boolean performMove(int col, int row) {
 
         int surroundingTileSummation;
         if (board[col][row].isOccupied()) {
@@ -105,6 +102,8 @@ public abstract class Game extends Observable {
         int sum = 0;
         String isBorderSpace = isBorderSpace(col, row);
         switch (isBorderSpace) {
+            default:
+                break;
             case "TOP_BORDER":
                 sum += board[row][col - 1].getNumber();
                 sum += board[row][col + 1].getNumber();
@@ -169,6 +168,9 @@ public abstract class Game extends Observable {
     private int removeBorderTiles(int row, int col) {
         int removed = 0;
         switch (isBorderSpace(col, row)) {
+            default:
+                break;
+
             case "TOP_BORDER":
                 if (board[row][col - 1].isOccupied()) {
                     board[row][col - 1].emptyTile();
@@ -261,8 +263,7 @@ public abstract class Game extends Observable {
 
         if(removed >= 3){
             return removed;
-        }
-        else{
+        } else {
             return 0;
         }
     }
@@ -275,8 +276,10 @@ public abstract class Game extends Observable {
                     board[0][1].emptyTile();
                     removed++;
                 }
-                if (board[1][0].isOccupied()) board[1][0].emptyTile();
-                removed++;
+                if (board[1][0].isOccupied()) {
+                    board[1][0].emptyTile();
+                    removed++;
+                }
 
                 if (board[1][1].isOccupied()) {
                     board[1][1].emptyTile();
@@ -328,13 +331,9 @@ public abstract class Game extends Observable {
             default:
                 break;
         }
-        if (removed >= 3)
-
-        {
+        if (removed >= 3) {
             return removed;
-        } else
-
-        {
+        } else {
             return 0;
         }
 
