@@ -73,11 +73,11 @@ public class BoardView extends JFrame implements Observer {
         gameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 
 
+        //Empty JLabels for formatting using GridLayout
         header.add(new JLabel());
         header.add(new JLabel());
         header.add(new JLabel());
         header.add(new JLabel());
-
         header.add(new JLabel());
         header.add(scoreTime);
         header.add(gameLabel);
