@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ScrumProject:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ScrumProject_jar</output-path>
+    <root id="archive" name="ScrumProject.jar">
+      <element id="module-output" name="ScrumProject" />
+    </root>
+  </artifact>
+</component>

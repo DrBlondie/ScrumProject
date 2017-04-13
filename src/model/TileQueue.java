@@ -53,7 +53,7 @@ public class TileQueue extends Observable{
 
         int value = dequeue();
         setChanged();
-        notifyObservers();
+        notifyObservers(numberQueue);
         return value;
     }
 
