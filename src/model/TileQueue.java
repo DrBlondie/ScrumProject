@@ -21,9 +21,9 @@ public class TileQueue extends Observable{
         placedTileCount = 0;
     }
 
-    public void startGame() {
+    public void updateGame() {
         setChanged();
-        notifyObservers();
+        notifyObservers(numberQueue);
     }
 
     private int dequeue() {
@@ -55,12 +55,6 @@ public class TileQueue extends Observable{
         setChanged();
         notifyObservers();
         return value;
-    }
-
-
-
-    public ArrayList<Integer> getQueue() {
-        return numberQueue;
     }
 
 }

@@ -41,7 +41,6 @@ public class BoardView extends JFrame implements Observer {
     private JTextField[] queue = new JTextField[5];
     private Color defaultColor = new Color(230, 230, 230);
     private Game currentBoard = null;
-    private TileQueue currentQueue = null;
 
     public BoardView() {
         setBackground(defaultColor);
@@ -60,6 +59,9 @@ public class BoardView extends JFrame implements Observer {
         JMenu game = new JMenu("Game");
         JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(e -> System.exit(0));
+        JMenuItem timed = new JMenuItem("New Timed Game");
+        timed.addActionListener(e -> newGame(true));
+        game.add(timed);
         game.add(exit);
         gameMenu.add(game);
         setJMenuBar(gameMenu);
@@ -99,7 +101,7 @@ public class BoardView extends JFrame implements Observer {
     }
 
     public void newGame(Boolean isTimed) {
-        currentQueue = new TileQueue();
+        TileQueue currentQueue = new TileQueue();
         if (isTimed) {
             currentBoard = new TimedGame(currentQueue);
         } else {
@@ -108,7 +110,7 @@ public class BoardView extends JFrame implements Observer {
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
         currentBoard.updateGame();
-        currentQueue.startGame();
+        currentQueue.updateGame();
     }
 
     private void buildPlayField() {
@@ -154,35 +156,41 @@ public class BoardView extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        if (arg == null) {
+            return;
+        }
+        switch (arg.getClass().getSimpleName()) {
+            case "String":
+                gameLabel.setText(currentBoard.getGameValue());
+                break;
+            case "ArrayList":
+                ArrayList numberQueue = (ArrayList) arg;
+                int i;
 
-        if (currentQueue != null && o.getClass().getSimpleName().equals("TileQueue")) {
-            ArrayList<Integer> numberQueue = currentQueue.getQueue();
-            int i;
+                for (i = 0; i < numberQueue.size() && i < queue.length; i++) {
+                    queue[i].setText(numberQueue.get(i).toString());
 
-            for (i = 0; i < numberQueue.size() && i < queue.length; i++) {
-                queue[i].setText(numberQueue.get(i) + "");
-
-            }
-            for (; i < queue.length; i++) {
-                queue[i].setText("");
-            }
-
-        } else if (currentBoard != null && o.getClass().getSimpleName().contains("Game")) {
-
-            Tile[][] gameBoard = currentBoard.getBoard();
-            for (int y = 0; y < gameBoard.length; y++) {
-                for (int x = 0; x < gameBoard[y].length; x++) {
-                    if (gameBoard[x][y].isOccupied()) {
-                        this.gameBoard[x][y].setText(gameBoard[x][y].getNumber() + "");
-                    } else {
-                        this.gameBoard[x][y].setText("");
+                }
+                for (; i < queue.length; i++) {
+                    queue[i].setText("");
+                }
+                break;
+            case "Tile[][]":
+                Tile[][] gameBoard = (Tile[][]) arg;
+                for (int y = 0; y < gameBoard.length; y++) {
+                    for (int x = 0; x < gameBoard[y].length; x++) {
+                        if (gameBoard[x][y].isOccupied()) {
+                            this.gameBoard[x][y].setText(gameBoard[x][y].getNumber() + "");
+                        } else {
+                            this.gameBoard[x][y].setText("");
+                        }
                     }
                 }
-            }
-
-            gameLabel.setText(currentBoard.getGameValue());
-            scoreTime.setText("Score: " + currentBoard.getScore());
-
+                gameLabel.setText(currentBoard.getGameValue());
+                scoreTime.setText("Score: " + currentBoard.getScore());
+                break;
+            default:
+                break;
         }
 
     }

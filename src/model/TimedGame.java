@@ -20,7 +20,8 @@ public class TimedGame extends Game {
                 if (timeUsed > 300) {
                     t.cancel();
                 }
-                updateGame();
+                setChanged();
+                notifyObservers(getGameValue());
             }
         }, Calendar.getInstance().getTime(), 1000L);
     }
@@ -43,4 +44,6 @@ public class TimedGame extends Game {
     public boolean checkMove(int col, int row) {
         return timeUsed < Main.MAX_TIME && performMove(col, row);
     }
+
 }
+
