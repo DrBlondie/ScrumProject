@@ -54,9 +54,9 @@ public class BoardView extends JFrame implements Observer {
         exit.addActionListener(e -> System.exit(0));
         JMenuItem timed = new JMenuItem("New Timed Game");
         timed.addActionListener(e -> newGame(true));
-        JMenuItem unTimed = new JMenuItem("New Untimed Game");
-        timed.addActionListener(e -> newGame(false));
-        game.add(unTimed);
+        JMenuItem untimed = new JMenuItem("New Untimed Game");
+        untimed.addActionListener(e -> newGame(false));
+        game.add(untimed);
         game.add(timed);
         game.add(exit);
         gameMenu.add(game);
