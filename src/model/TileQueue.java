@@ -11,19 +11,33 @@ public class TileQueue extends Observable{
     private static final int MAX_SIZE = 5;
     private ArrayList<Integer> numberQueue = new ArrayList<>();
     private int placedTileCount;
+    private int rerollLeft;
 
     public TileQueue() {
-
+        rerollLeft=1;
         for (int i = 0; i < MAX_SIZE; i++) {
-
             numberQueue.add((int) (Math.random() * 10));
         }
+
         placedTileCount = 0;
+
+    }
+    public void rerollQueue(){
+        if(rerollLeft>0) {
+            for (int i = 0; i < MAX_SIZE; i++) {
+                numberQueue.remove(0);
+                numberQueue.add((int) (Math.random() * 10));
+            }
+        }
+        rerollLeft--;
+        setChanged();
+        notifyObservers(numberQueue);
     }
 
     public void updateGame() {
         setChanged();
         notifyObservers(numberQueue);
+        placedTileCount = 0;
     }
 
     private int dequeue() {

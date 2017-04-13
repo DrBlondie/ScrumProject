@@ -14,15 +14,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 import model.Game;
@@ -41,7 +33,8 @@ public class BoardView extends JFrame implements Observer {
     private JTextField[] queue = new JTextField[5];
     private Color defaultColor = new Color(230, 230, 230);
     private Game currentBoard = null;
-
+    private JButton rerollButton = new JButton("Reroll: 1");;
+    private TileQueue currentQueue;
     public BoardView() {
         setBackground(defaultColor);
         setTitle("Sum Fun");
@@ -61,6 +54,9 @@ public class BoardView extends JFrame implements Observer {
         exit.addActionListener(e -> System.exit(0));
         JMenuItem timed = new JMenuItem("New Timed Game");
         timed.addActionListener(e -> newGame(true));
+        JMenuItem unTimed = new JMenuItem("New Untimed Game");
+        timed.addActionListener(e -> newGame(false));
+        game.add(unTimed);
         game.add(timed);
         game.add(exit);
         gameMenu.add(game);
@@ -101,7 +97,8 @@ public class BoardView extends JFrame implements Observer {
     }
 
     public void newGame(Boolean isTimed) {
-        TileQueue currentQueue = new TileQueue();
+        currentQueue = new TileQueue();
+        rerollButton.setText("Reroll: 1");
         if (isTimed) {
             currentBoard = new TimedGame(currentQueue);
         } else {
@@ -139,16 +136,19 @@ public class BoardView extends JFrame implements Observer {
     private void buildQueueBox() {
 
         queueBox.setLayout(new GridBagLayout());
+        queueBox.setBackground(defaultColor);
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
         c.gridy = 0;
         c.gridx = 0;
         c.gridwidth = 50;
         c.insets = new Insets(0, 0, 0, 0);
+        queueBox.add(rerollButton,c);
+        rerollButton.addMouseListener(new ButtonClick());
         for (int i = 0; i < queue.length; i++) {
             queue[i] = getNewTextField();
             queue[i].setBackground(defaultColor);
-            c.gridy = i;
+            c.gridy = i+1;
             queueBox.add(queue[i], c);
         }
     }
@@ -211,7 +211,13 @@ public class BoardView extends JFrame implements Observer {
         textField.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, 16));
         return textField;
     }
+    private class ButtonClick extends  MouseAdapter{
+        public void mouseClicked(MouseEvent e){
+            currentQueue.rerollQueue();
+            rerollButton.setText("Reroll: 0");
 
+        }
+    }
     private class MouseClick extends MouseAdapter {
         private Point boardPosition;
 
@@ -222,6 +228,7 @@ public class BoardView extends JFrame implements Observer {
         public void mouseClicked(MouseEvent e) {
             if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+
             }
         }
 
