@@ -33,8 +33,9 @@ public class BoardView extends JFrame implements Observer {
     private JTextField[] queue = new JTextField[5];
     private Color defaultColor = new Color(230, 230, 230);
     private Game currentBoard = null;
-    private JButton rerollButton = new JButton("Reroll: 1");;
+    private JButton rerollButton = new JButton("Reroll: 1");
     private TileQueue currentQueue;
+    private ScoreBoardView scoreBoard;
     public BoardView() {
         setBackground(defaultColor);
         setTitle("Sum Fun");
@@ -56,8 +57,11 @@ public class BoardView extends JFrame implements Observer {
         timed.addActionListener(e -> newGame(true));
         JMenuItem untimed = new JMenuItem("New Untimed Game");
         untimed.addActionListener(e -> newGame(false));
+        JMenuItem scoreBoardMenu = new JMenuItem("Top 10 Most Points");
+        scoreBoardMenu.addActionListener(e -> scoreBoard = new ScoreBoardView());
         game.add(untimed);
         game.add(timed);
+        game.add(scoreBoardMenu);
         game.add(exit);
         gameMenu.add(game);
         setJMenuBar(gameMenu);
