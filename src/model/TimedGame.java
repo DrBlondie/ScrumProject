@@ -9,9 +9,16 @@ import main.Main;
 
 public class TimedGame extends Game {
     private int timeUsed = 0;
+    private static TimedGame instance = null;
 
-    public TimedGame(TileQueue queue) {
-        super(queue);
+    public static Game getInstance() {
+        if(instance == null) {
+            instance = new TimedGame();
+        }
+        return instance;
+    }
+    private TimedGame() {
+        super(new TileQueue(true));
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -24,6 +31,11 @@ public class TimedGame extends Game {
                 notifyObservers(getGameValue());
             }
         }, Calendar.getInstance().getTime(), 1000L);
+    }
+    @Override
+    public void newGame() {
+        timeUsed = 0;
+        restartGame();
     }
 
     @Override

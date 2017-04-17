@@ -4,9 +4,23 @@ import main.Main;
 
 public class UntimedGame extends Game {
     private int numberOfMoves = 0;
+    private static UntimedGame instance = null;
 
-    public UntimedGame(TileQueue queue) {
-        super(queue);
+    public static Game getInstance() {
+        if(instance == null) {
+            instance = new UntimedGame();
+        }
+        return instance;
+    }
+
+    private UntimedGame() {
+        super(new TileQueue(false));
+    }
+
+    @Override
+    public void newGame() {
+        numberOfMoves = 0;
+        restartGame();
     }
 
     @Override
