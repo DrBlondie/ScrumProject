@@ -8,20 +8,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-public class ScoreBoard
-{
+public class ScoreBoard {
     private ArrayList<Integer> scores;
     private ArrayList<String> names;
     private ArrayList<LocalDate> dates;
     private DateTimeFormatter dtf;
 
-    private final int SCORE_INDEX = 0;
-    private final int NAME_INDEX = 1;
-    private final int DATE_INDEX = 2;
-    private final String SCORE_FILE = "scores.txt";
+    private static final int SCORE_INDEX = 0;
+    private static final int NAME_INDEX = 1;
+    private static final int DATE_INDEX = 2;
+    private static final String SCORE_FILE = "scores.txt";
 
-    public ScoreBoard()
-    {
+    private static final int MAX_SIZE = 10;
+
+    public ScoreBoard() {
         scores = new ArrayList<>();
         names = new ArrayList<>();
         dates = new ArrayList<>();
@@ -33,54 +33,58 @@ public class ScoreBoard
         updateScoreFile();
     }
 
-    private void populateScoreBoard()
-    {
-        try
-        {
+    public boolean isHighScore(int score){
+        for (int highScores: scores) {
+            if(score > highScores){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateScores(String name, int score){
+        addScore(score + "," + name + "," + LocalDate.now());
+        sortScores();
+        ensureCapacity();
+        updateScoreFile();
+    }
+
+    private void populateScoreBoard() {
+        try {
             File scoreFileToScan = new File(SCORE_FILE);
             Scanner scanScoreFile = new Scanner(scoreFileToScan);
 
-            while(scanScoreFile.hasNextLine())
-            {
+            while (scanScoreFile.hasNextLine()) {
                 String currentLine = scanScoreFile.nextLine();
                 addScore(currentLine);
             }
             scanScoreFile.close();
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             System.out.println("File not found!");
         }
     }
 
-    private void addScore(String scoreInformation)
-    {
+    private void addScore(String scoreInformation) {
         String[] scoreInfo = scoreInformation.split(",");
-        try
-        {
+        try {
             scores.add(Integer.parseInt(scoreInfo[SCORE_INDEX]));
             names.add(scoreInfo[NAME_INDEX]);
             dates.add(LocalDate.parse(scoreInfo[DATE_INDEX]));
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             System.out.println("Invalid score information detected");
         }
     }
 
-    private void sortScores()
-    {
+    private void sortScores() {
         ArrayList<Integer> sortedScores = new ArrayList<>();
         ArrayList<Integer> tempScores = new ArrayList<>();
         ArrayList<String> tempNames = new ArrayList<>();
         ArrayList<LocalDate> tempDates = new ArrayList<>();
-
-        for(int score : scores) sortedScores.add(score);
+        sortedScores.addAll(scores);
         Collections.sort(sortedScores);
         Collections.reverse(sortedScores);
 
-        for(int sortedScore : sortedScores)
-        {
+        for (int sortedScore : sortedScores) {
             int prevScorePosition = scores.indexOf(sortedScore);
             int sortedScorePosition = sortedScores.indexOf(sortedScore);
 
@@ -99,11 +103,9 @@ public class ScoreBoard
         dates = tempDates;
     }
 
-    public String[] getPlayerScore(int position)
-    {
+    public String[] getPlayerScore(int position) {
         String[] scoreArray = new String[3];
-        if(position >= scores.size())
-        {
+        if (position >= scores.size()) {
             scoreArray[SCORE_INDEX] = "";
             scoreArray[NAME_INDEX] = "";
             scoreArray[DATE_INDEX] = "";
@@ -116,31 +118,23 @@ public class ScoreBoard
         return scoreArray;
     }
 
-    private void ensureCapacity()
-    {
-        final int MAX_SIZE = 10;
-        if(scores.size() > MAX_SIZE || names.size() > MAX_SIZE || dates.size() > MAX_SIZE)
-        {
+    private void ensureCapacity() {
+        if (scores.size() > MAX_SIZE || names.size() > MAX_SIZE || dates.size() > MAX_SIZE) {
             scores.subList(MAX_SIZE, scores.size()).clear();
             names.subList(MAX_SIZE, names.size()).clear();
             dates.subList(MAX_SIZE, dates.size()).clear();
         }
     }
 
-    private void updateScoreFile()
-    {
-        try
-        {
-            PrintWriter pW = new PrintWriter(SCORE_FILE);
-            for(int index = 0; index < scores.size(); index++)
-            {
-                pW.println(scores.get(index).toString() + "," + names.get(index) + "," + dtf.format(dates.get(index)));
+    private void updateScoreFile() {
+        try {
+            PrintWriter writer = new PrintWriter(SCORE_FILE);
+            for (int index = 0; index < scores.size(); index++) {
+                writer.println(scores.get(index).toString() + "," + names.get(index) + "," + dtf.format(dates.get(index)));
             }
 
-            pW.close();
-        }
-        catch (Exception ex)
-        {
+            writer.close();
+        } catch (Exception ex) {
             System.out.println("File not found!");
         }
     }

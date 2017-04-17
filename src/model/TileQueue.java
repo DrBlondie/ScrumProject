@@ -12,6 +12,7 @@ public class TileQueue extends Observable{
     private ArrayList<Integer> numberQueue = new ArrayList<>();
     private int placedTileCount;
     private int rerollLeft;
+    private boolean isTimed = false;
 
     public TileQueue() {
         rerollLeft=1;
@@ -55,13 +56,17 @@ public class TileQueue extends Observable{
 
     }
 
+    public void changeGameType(boolean timed){
+        isTimed = timed;
+    }
+
     private void enqueue() {
         numberQueue.add((int) (Math.random() * 10));
     }
 
     int placeTile() {
 
-        if (placedTileCount < Main.MAX_MOVES - MAX_SIZE) {
+        if (isTimed || placedTileCount < Main.MAX_MOVES - MAX_SIZE) {
             enqueue();
         }
 

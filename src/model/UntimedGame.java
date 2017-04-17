@@ -21,8 +21,19 @@ public class UntimedGame extends Game {
             return false;
         } else {
             numberOfMoves++;
-            return performMove(col, row);
+            boolean move = performMove(col,row);
+            if(!move){
+                numberOfMoves--;
+            }
+            setChanged();
+            notifyObservers(this.getBoard());
+            return move;
 
         }
+    }
+
+    @Override
+    public boolean gameOver() {
+        return numberOfMoves >= Main.MAX_MOVES;
     }
 }

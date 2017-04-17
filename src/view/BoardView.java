@@ -14,10 +14,21 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
 import model.Game;
+import model.ScoreBoard;
 import model.Tile;
 import model.TileQueue;
 import model.TimedGame;
@@ -35,7 +46,9 @@ public class BoardView extends JFrame implements Observer {
     private Game currentBoard = null;
     private JButton rerollButton = new JButton("Reroll: 1");
     private TileQueue currentQueue;
-    private ScoreBoardView scoreBoard;
+    private ScoreBoard scores;
+    private boolean gameOver = false;
+
     public BoardView() {
         setBackground(defaultColor);
         setTitle("Sum Fun");
@@ -48,7 +61,7 @@ public class BoardView extends JFrame implements Observer {
         c.fill = GridBagConstraints.NONE;
         c.gridy = 0;
         c.gridx = 0;
-
+        scores = new ScoreBoard();
         JMenuBar gameMenu = new JMenuBar();
         JMenu game = new JMenu("Game");
         JMenuItem exit = new JMenuItem("Exit");
@@ -58,23 +71,19 @@ public class BoardView extends JFrame implements Observer {
         JMenuItem untimed = new JMenuItem("New Untimed Game");
         untimed.addActionListener(e -> newGame(false));
         JMenuItem scoreBoardMenu = new JMenuItem("Top 10 Most Points");
-        scoreBoardMenu.addActionListener(e -> scoreBoard = new ScoreBoardView());
+        scoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores));
+
         game.add(untimed);
         game.add(timed);
         game.add(scoreBoardMenu);
         game.add(exit);
         gameMenu.add(game);
         setJMenuBar(gameMenu);
-
         JPanel header = new JPanel();
         header.setBackground(defaultColor);
         header.setLayout(new GridLayout(2, 4));
-
-
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
         gameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-
-
         //Empty JLabels for formatting using GridLayout
         header.add(new JLabel());
         header.add(new JLabel());
@@ -84,7 +93,6 @@ public class BoardView extends JFrame implements Observer {
         header.add(scoreTime);
         header.add(gameLabel);
         header.add(new JLabel());
-
         add(header, BorderLayout.NORTH);
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridBagLayout());
@@ -97,16 +105,18 @@ public class BoardView extends JFrame implements Observer {
         boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
-
     }
 
     public void newGame(Boolean isTimed) {
+        gameOver = false;
         currentQueue = new TileQueue();
         rerollButton.setText("Reroll: 1");
         if (isTimed) {
             currentBoard = new TimedGame(currentQueue);
+            currentQueue.changeGameType(true);
         } else {
             currentBoard = new UntimedGame(currentQueue);
+            currentQueue.changeGameType(false);
         }
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
@@ -147,12 +157,12 @@ public class BoardView extends JFrame implements Observer {
         c.gridx = 0;
         c.gridwidth = 50;
         c.insets = new Insets(0, 0, 0, 0);
-        queueBox.add(rerollButton,c);
+        queueBox.add(rerollButton, c);
         rerollButton.addMouseListener(new ButtonClick());
         for (int i = 0; i < queue.length; i++) {
             queue[i] = getNewTextField();
             queue[i].setBackground(defaultColor);
-            c.gridy = i+1;
+            c.gridy = i + 1;
             queueBox.add(queue[i], c);
         }
     }
@@ -212,16 +222,18 @@ public class BoardView extends JFrame implements Observer {
         textField.setPreferredSize(new Dimension(50, 50));
         textField.setBorder(gameBorder);
         textField.setHorizontalAlignment(JTextField.CENTER);
-        textField.setFont(new Font("SansSerif", Font.TRUETYPE_FONT, 16));
+        textField.setFont(new Font("SansSerif", Font.PLAIN, 16));
         return textField;
     }
-    private class ButtonClick extends  MouseAdapter{
-        public void mouseClicked(MouseEvent e){
+
+    private class ButtonClick extends MouseAdapter {
+        public void mouseClicked(MouseEvent e) {
             currentQueue.rerollQueue();
             rerollButton.setText("Reroll: 0");
 
         }
     }
+
     private class MouseClick extends MouseAdapter {
         private Point boardPosition;
 
@@ -230,9 +242,28 @@ public class BoardView extends JFrame implements Observer {
         }
 
         public void mouseClicked(MouseEvent e) {
+            if(gameOver){
+                return;
+            }
             if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
 
+            }
+            if (currentBoard.gameWin()) {
+                gameOver = true;
+                if (scores.isHighScore(currentBoard.getScore())) {
+                    String name = JOptionPane.showInputDialog("You Win! New High Score! Please enter your name:");
+                    while(name == null) {
+                        name = JOptionPane.showInputDialog("Please enter a valid name:");
+                    }
+                    scores.updateScores(name, currentBoard.getScore());
+                } else {
+                    JOptionPane.showMessageDialog(null, "You Win!");
+                }
+            }
+            if(currentBoard.gameOver()){
+                gameOver = true;
+                JOptionPane.showMessageDialog(null, "You Lose. Please try again.");
             }
         }
 
@@ -241,7 +272,7 @@ public class BoardView extends JFrame implements Observer {
         }
 
         public void mouseEntered(MouseEvent e) {
-            if (!currentBoard.isOccupied(boardPosition.x, boardPosition.y)) {
+            if (!currentBoard.isOccupied(boardPosition.x, boardPosition.y) && !gameOver) {
                 Color randomColor = new Color((int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127));
                 queue[0].setBackground(randomColor);
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(randomColor);
