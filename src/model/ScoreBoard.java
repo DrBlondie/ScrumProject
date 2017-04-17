@@ -28,6 +28,7 @@ public class ScoreBoard {
         dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         populateScoreBoard();
+        sortDates();
         sortScores();
         ensureCapacity();
         updateScoreFile();
@@ -73,6 +74,34 @@ public class ScoreBoard {
         } catch (Exception ex) {
             System.out.println("Invalid score information detected");
         }
+    }
+
+    private void sortDates(){
+        ArrayList<LocalDate> sortedDates = new ArrayList<>();
+        ArrayList<Integer> tempScores = new ArrayList<>();
+        ArrayList<String> tempNames = new ArrayList<>();
+        ArrayList<LocalDate> tempDates = new ArrayList<>();
+        sortedDates.addAll(dates);
+        Collections.sort(sortedDates);
+        Collections.reverse(sortedDates);
+
+        for(LocalDate sortedDate : sortedDates){
+            int prevDateLocation = dates.indexOf(sortedDate);
+            int sortedDateLocation = sortedDates.indexOf(sortedDate);
+
+            int score = scores.get(prevDateLocation);
+            String name = names.get(prevDateLocation);
+
+            scores.remove(prevDateLocation);
+            tempScores.add(sortedDateLocation, score);
+            names.remove(prevDateLocation);
+            tempNames.add(sortedDateLocation, name);
+            dates.remove(prevDateLocation);
+            tempDates.add(sortedDateLocation, sortedDate);
+        }
+        scores = tempScores;
+        names = tempNames;
+        dates = tempDates;
     }
 
     private void sortScores() {
