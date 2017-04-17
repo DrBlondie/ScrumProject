@@ -109,15 +109,14 @@ public class BoardView extends JFrame implements Observer {
 
     public void newGame(Boolean isTimed) {
         gameOver = false;
-        currentQueue = new TileQueue();
         rerollButton.setText("Reroll: 1");
         if (isTimed) {
-            currentBoard = new TimedGame(currentQueue);
-            currentQueue.changeGameType(true);
+            currentBoard = TimedGame.getInstance();
         } else {
-            currentBoard = new UntimedGame(currentQueue);
-            currentQueue.changeGameType(false);
+            currentBoard = UntimedGame.getInstance();
         }
+        currentBoard.newGame();
+        currentQueue = currentBoard.getQueue();
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
         currentBoard.updateGame();

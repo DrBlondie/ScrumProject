@@ -14,8 +14,9 @@ public class TileQueue extends Observable{
     private int rerollLeft;
     private boolean isTimed = false;
 
-    public TileQueue() {
+    TileQueue(boolean timed) {
         rerollLeft=1;
+        isTimed = timed;
         for (int i = 0; i < MAX_SIZE; i++) {
             numberQueue.add((int) (Math.random() * 10));
         }
@@ -55,11 +56,6 @@ public class TileQueue extends Observable{
         throw new Error("There are not sufficient Tiles in the queue");
 
     }
-
-    public void changeGameType(boolean timed){
-        isTimed = timed;
-    }
-
     private void enqueue() {
         numberQueue.add((int) (Math.random() * 10));
     }

@@ -15,6 +15,10 @@ public abstract class Game extends Observable {
     Game(TileQueue queue) {
         currentQueue = queue;
         board = new Tile[NUMBER_OF_COLUMNS][NUMBER_OF_ROWS];
+        restartGame();
+    }
+
+    void restartGame(){
         for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
             for (int j = 0; j < NUMBER_OF_ROWS; j++) {
                 board[i][j] = new Tile();
@@ -25,6 +29,8 @@ public abstract class Game extends Observable {
         }
         score = 0;
     }
+
+    public abstract void newGame();
 
     public void updateGame() {
         setChanged();
@@ -94,6 +100,10 @@ public abstract class Game extends Observable {
         return true;
     }
 
+    public TileQueue getQueue(){
+        return currentQueue;
+    }
+
     public int getScore() {
         return score;
     }
@@ -108,6 +118,8 @@ public abstract class Game extends Observable {
     public abstract boolean checkMove(int col, int row);
 
     public abstract boolean gameOver();
+
+
 
 }
 
