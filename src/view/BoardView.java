@@ -244,10 +244,6 @@ public class BoardView extends JFrame implements Observer {
             if(gameOver){
                 return;
             }
-            if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
-                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
-
-            }
             if (currentBoard.gameWin()) {
                 gameOver = true;
                 if (scores.isHighScore(currentBoard.getScore())) {
@@ -259,11 +255,19 @@ public class BoardView extends JFrame implements Observer {
                 } else {
                     JOptionPane.showMessageDialog(null, "You Win!");
                 }
+                return;
             }
             if(currentBoard.gameOver()){
                 gameOver = true;
                 JOptionPane.showMessageDialog(null, "You Lose. Please try again.");
+
+                return;
             }
+            if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+
+            }
+
         }
 
         public void mouseExited(MouseEvent e) {

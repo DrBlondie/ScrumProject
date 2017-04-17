@@ -24,9 +24,6 @@ public class TimedGame extends Game {
             @Override
             public void run() {
                 timeUsed++;
-                if (timeUsed > 300) {
-                    t.cancel();
-                }
                 setChanged();
                 notifyObservers(getGameValue());
             }
