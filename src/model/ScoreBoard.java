@@ -6,12 +6,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class ScoreBoard {
-    private ArrayList<Integer> scores;
-    private ArrayList<String> names;
-    private ArrayList<LocalDate> dates;
+    private ArrayList<PlayerScore> playerScores;
     private DateTimeFormatter dtf;
 
     private static final int SCORE_INDEX = 0;
@@ -22,21 +21,18 @@ public class ScoreBoard {
     private static final int MAX_SIZE = 10;
 
     public ScoreBoard() {
-        scores = new ArrayList<>();
-        names = new ArrayList<>();
-        dates = new ArrayList<>();
+        playerScores = new ArrayList<>();
         dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         populateScoreBoard();
-        sortDates();
         sortScores();
         ensureCapacity();
         updateScoreFile();
     }
 
     public boolean isHighScore(int score){
-        for (int highScores: scores) {
-            if(score > highScores){
+        for (PlayerScore highScores: playerScores) {
+            if(score > highScores.getScore()){
                 return true;
             }
         }
@@ -68,98 +64,70 @@ public class ScoreBoard {
     private void addScore(String scoreInformation) {
         String[] scoreInfo = scoreInformation.split(",");
         try {
-            scores.add(Integer.parseInt(scoreInfo[SCORE_INDEX]));
-            names.add(scoreInfo[NAME_INDEX]);
-            dates.add(LocalDate.parse(scoreInfo[DATE_INDEX]));
+            int score = Integer.parseInt(scoreInfo[SCORE_INDEX]);
+            String name = scoreInfo[NAME_INDEX];
+            LocalDate date = LocalDate.parse(scoreInfo[DATE_INDEX]);
+
+            PlayerScore playerScore = new PlayerScore(score, name, date);
+            playerScores.add(playerScore);
         } catch (Exception ex) {
             System.out.println("Invalid score information detected");
         }
     }
 
-    private void sortDates(){
-        ArrayList<LocalDate> sortedDates = new ArrayList<>();
-        ArrayList<Integer> tempScores = new ArrayList<>();
-        ArrayList<String> tempNames = new ArrayList<>();
-        ArrayList<LocalDate> tempDates = new ArrayList<>();
-        sortedDates.addAll(dates);
-        Collections.sort(sortedDates);
-        Collections.reverse(sortedDates);
-
-        for(LocalDate sortedDate : sortedDates){
-            int prevDateLocation = dates.indexOf(sortedDate);
-            int sortedDateLocation = sortedDates.indexOf(sortedDate);
-
-            int score = scores.get(prevDateLocation);
-            String name = names.get(prevDateLocation);
-
-            scores.remove(prevDateLocation);
-            tempScores.add(sortedDateLocation, score);
-            names.remove(prevDateLocation);
-            tempNames.add(sortedDateLocation, name);
-            dates.remove(prevDateLocation);
-            tempDates.add(sortedDateLocation, sortedDate);
-        }
-        scores = tempScores;
-        names = tempNames;
-        dates = tempDates;
-    }
-
     private void sortScores() {
-        ArrayList<Integer> sortedScores = new ArrayList<>();
-        ArrayList<Integer> tempScores = new ArrayList<>();
-        ArrayList<String> tempNames = new ArrayList<>();
-        ArrayList<LocalDate> tempDates = new ArrayList<>();
-        sortedScores.addAll(scores);
-        Collections.sort(sortedScores);
-        Collections.reverse(sortedScores);
+        Collections.sort(playerScores, new Comparator<PlayerScore>() {
+            @Override
+            public int compare(PlayerScore playerScore1, PlayerScore playerScore2) {
+                if(playerScore2.getScore() == playerScore1.getScore()){
+                    LocalDate playerDate1 = playerScore1.getDate();
+                    LocalDate playerDate2 = playerScore2.getDate();
 
-        for (int sortedScore : sortedScores) {
-            int prevScorePosition = scores.indexOf(sortedScore);
-            int sortedScorePosition = sortedScores.indexOf(sortedScore);
-
-            String name = names.get(prevScorePosition);
-            LocalDate date = dates.get(prevScorePosition);
-
-            scores.remove(prevScorePosition);
-            tempScores.add(sortedScorePosition, sortedScore);
-            names.remove(prevScorePosition);
-            tempNames.add(sortedScorePosition, name);
-            dates.remove(prevScorePosition);
-            tempDates.add(sortedScorePosition, date);
-        }
-        scores = tempScores;
-        names = tempNames;
-        dates = tempDates;
+                    int compareDates = playerDate1.getYear() - playerDate2.getYear();
+                    if(compareDates == 0) {
+                        compareDates = playerDate1.getMonthValue() - playerDate2.getMonthValue();
+                        if(compareDates == 0){
+                            compareDates = playerDate1.getDayOfMonth() - playerDate2.getDayOfMonth();
+                        }
+                    }
+                    return compareDates;
+                }
+                return playerScore2.getScore() - playerScore1.getScore();
+            }
+        });
     }
 
     public String[] getPlayerScore(int position) {
         String[] scoreArray = new String[3];
-        if (position >= scores.size()) {
+        if (position >= playerScores.size()) {
             scoreArray[SCORE_INDEX] = "";
             scoreArray[NAME_INDEX] = "";
             scoreArray[DATE_INDEX] = "";
             return scoreArray;
         }
-        scoreArray[SCORE_INDEX] = scores.get(position).toString();
-        scoreArray[NAME_INDEX] = names.get(position);
-        scoreArray[DATE_INDEX] = dtf.format(dates.get(position));
+        PlayerScore currentPlayerScore = playerScores.get(position);
+        int score = currentPlayerScore.getScore();
+        String name = currentPlayerScore.getName();
+        LocalDate date = currentPlayerScore.getDate();
+
+        scoreArray[SCORE_INDEX] = "" + score;
+        scoreArray[NAME_INDEX] = name;
+        scoreArray[DATE_INDEX] = dtf.format(date);
 
         return scoreArray;
     }
 
     private void ensureCapacity() {
-        if (scores.size() > MAX_SIZE || names.size() > MAX_SIZE || dates.size() > MAX_SIZE) {
-            scores.subList(MAX_SIZE, scores.size()).clear();
-            names.subList(MAX_SIZE, names.size()).clear();
-            dates.subList(MAX_SIZE, dates.size()).clear();
+        if (playerScores.size() > MAX_SIZE) {
+            playerScores.subList(MAX_SIZE, playerScores.size()).clear();
         }
     }
 
     private void updateScoreFile() {
         try {
             PrintWriter writer = new PrintWriter(SCORE_FILE);
-            for (int index = 0; index < scores.size(); index++) {
-                writer.println(scores.get(index).toString() + "," + names.get(index) + "," + dtf.format(dates.get(index)));
+            for (PlayerScore playerScore : playerScores) {
+                writer.println(playerScore.getScore() + "," + playerScore.getName() + "," + dtf.format(playerScore.getDate()));
             }
 
             writer.close();
