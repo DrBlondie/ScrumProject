@@ -30,8 +30,6 @@ public abstract class Game extends Observable {
         score = 0;
     }
 
-    public abstract void newGame();
-
     public void updateGame() {
         setChanged();
         notifyObservers(board);
@@ -119,6 +117,7 @@ public abstract class Game extends Observable {
 
     public abstract boolean gameOver();
 
+    public abstract void newGame();
 
 
 }

@@ -43,6 +43,8 @@ public class TileQueue extends Observable{
         setChanged();
         notifyObservers(numberQueue);
         placedTileCount = 0;
+        rerollLeft = 2;
+        rerollQueue();
     }
 
     private int dequeue() {
