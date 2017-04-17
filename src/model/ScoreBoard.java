@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class ScoreBoard {
@@ -30,16 +28,16 @@ public class ScoreBoard {
         updateScoreFile();
     }
 
-    public boolean isHighScore(int score){
-        for (PlayerScore highScores: playerScores) {
-            if(score > highScores.getScore()){
+    public boolean isHighScore(int score) {
+        for (PlayerScore highScores : playerScores) {
+            if (score > highScores.getScore()) {
                 return true;
             }
         }
         return false;
     }
 
-    public void updateScores(String name, int score){
+    public void updateScores(String name, int score) {
         addScore(score + "," + name + "," + LocalDate.now());
         sortScores();
         ensureCapacity();
@@ -76,24 +74,21 @@ public class ScoreBoard {
     }
 
     private void sortScores() {
-        Collections.sort(playerScores, new Comparator<PlayerScore>() {
-            @Override
-            public int compare(PlayerScore playerScore1, PlayerScore playerScore2) {
-                if(playerScore2.getScore() == playerScore1.getScore()){
-                    LocalDate playerDate1 = playerScore1.getDate();
-                    LocalDate playerDate2 = playerScore2.getDate();
+        playerScores.sort((playerScore1, playerScore2) -> {
+            if (playerScore2.getScore() == playerScore1.getScore()) {
+                LocalDate playerDate1 = playerScore1.getDate();
+                LocalDate playerDate2 = playerScore2.getDate();
 
-                    int compareDates = playerDate1.getYear() - playerDate2.getYear();
-                    if(compareDates == 0) {
-                        compareDates = playerDate1.getMonthValue() - playerDate2.getMonthValue();
-                        if(compareDates == 0){
-                            compareDates = playerDate1.getDayOfMonth() - playerDate2.getDayOfMonth();
-                        }
+                int compareDates = playerDate1.getYear() - playerDate2.getYear();
+                if (compareDates == 0) {
+                    compareDates = playerDate1.getMonthValue() - playerDate2.getMonthValue();
+                    if (compareDates == 0) {
+                        compareDates = playerDate1.getDayOfMonth() - playerDate2.getDayOfMonth();
                     }
-                    return compareDates;
                 }
-                return playerScore2.getScore() - playerScore1.getScore();
+                return compareDates;
             }
+            return playerScore2.getScore() - playerScore1.getScore();
         });
     }
 
