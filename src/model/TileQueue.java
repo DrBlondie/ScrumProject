@@ -15,7 +15,7 @@ public class TileQueue extends Observable{
     private boolean isTimed = false;
 
     TileQueue(boolean timed) {
-        rerollLeft=1;
+
         isTimed = timed;
         for (int i = 0; i < MAX_SIZE; i++) {
             numberQueue.add((int) (Math.random() * 10));
@@ -23,6 +23,9 @@ public class TileQueue extends Observable{
 
         placedTileCount = 0;
 
+    }
+    public void setRerollLeft(int rerollLeft){
+        this.rerollLeft = rerollLeft;
     }
     public void rerollQueue(){
         if(rerollLeft>0) {

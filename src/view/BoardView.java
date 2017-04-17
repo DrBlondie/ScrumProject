@@ -110,6 +110,7 @@ public class BoardView extends JFrame implements Observer {
     public void newGame(Boolean isTimed) {
         gameOver = false;
         rerollButton.setText("Reroll: 1");
+
         if (isTimed) {
             currentBoard = TimedGame.getInstance();
         } else {
@@ -117,6 +118,7 @@ public class BoardView extends JFrame implements Observer {
         }
         currentBoard.newGame();
         currentQueue = currentBoard.getQueue();
+        currentQueue.setRerollLeft(1);
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
         currentBoard.updateGame();
