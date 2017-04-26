@@ -9,6 +9,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.Image;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -26,6 +29,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+
+import java.io.*;
+import com.sun.media.sound.WaveFileReader;
+import sun.audio.*;
 
 import model.Game;
 import model.ScoreBoard;
@@ -73,7 +80,6 @@ public class BoardView extends JFrame implements Observer {
         untimed.addActionListener(e -> newGame(false));
         JMenuItem scoreBoardMenu = new JMenuItem("Top 10 Most Points");
         scoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores));
-
         game.add(untimed);
         game.add(timed);
         game.add(scoreBoardMenu);
@@ -106,6 +112,8 @@ public class BoardView extends JFrame implements Observer {
         boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
+        makeEngaging();
+
     }
 
     public void newGame(Boolean isTimed) {
@@ -230,6 +238,78 @@ public class BoardView extends JFrame implements Observer {
         return textField;
     }
 
+    private void makeEngaging(){
+        setupSound("/gameMusic.wav");
+        setupCursor("/mushroomIcon.png");
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image image = toolkit.getImage(getClass().getResource("/marioMainIcon.png"));
+        setIconImage(image);
+
+    }
+
+    private void setupCursor(String fileName){
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image image = toolkit.getImage(getClass().getResource(fileName));
+        Point hotspot = new Point(3,3);
+        Cursor cursor = toolkit.createCustomCursor(image, hotspot, "icon");
+        setCursor(cursor);
+    }
+
+    private void setupSound(String fileName){
+        try {
+            InputStream inputStream = getClass().getResourceAsStream(fileName);
+            AudioStream audioStream = new AudioStream(inputStream);
+            AudioPlayer.player.start(audioStream);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Audio file not found!");
+
+        }
+    }
+
+    private Color getRandomMarioColor(){
+        int randomNumber = (int)(Math.random()* 5);
+
+        switch(randomNumber) {
+            case 0:
+                return new Color(242, 208, 49);
+            case 1:
+                return new Color(7, 201, 0);
+            case 2:
+                return new Color(1, 223, 225);
+            case 3:
+                return new Color(247, 61, 67);
+        }
+
+        return Color.WHITE;
+    }
+
+    public void changeUI(){
+        int randomNumber = (int) (Math.random() * 4);
+        switch(randomNumber){
+            case 0 :
+                setupCursor("/mushroomIcon.png");
+                setupSound("/mushroom.wav");
+                break;
+
+            case 1 :
+                setupCursor("/coinIcon.gif");
+                setupSound("/coin.wav");
+                break;
+
+            case 2:
+                setupCursor("/yoshiIcon.png");
+                setupSound("/yoshi.wav");
+                break;
+
+            case 3:
+                setupCursor("/pipeIcon.png");
+                setupSound("/pipe.wav");
+                break;
+        }
+    }
+
+
+
     private class ButtonClick extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
             currentQueue.rerollQueue();
@@ -269,6 +349,7 @@ public class BoardView extends JFrame implements Observer {
                 return;
             }
             if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
+                changeUI();
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
 
             }else{
@@ -300,12 +381,12 @@ public class BoardView extends JFrame implements Observer {
 
         public void mouseEntered(MouseEvent e) {
             if (!currentBoard.isOccupied(boardPosition.x, boardPosition.y) && !gameOver) {
-                Color randomColor = new Color((int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127));
+                Color randomColor = getRandomMarioColor();
                 queue[0].setBackground(randomColor);
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(randomColor);
             }
            if(currentBoard.isOccupied(boardPosition.x, boardPosition.y) && !gameOver) {
-               Color randomColor = new Color((int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127));
+               Color randomColor = getRandomMarioColor();
                if (currentBoard.getRemoveTileLeft() == 1) {
                    for (int x = 0; x < 9; x++) {
                        for (int y = 0; y < 9; y++) {
