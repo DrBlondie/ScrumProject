@@ -38,6 +38,7 @@ import model.UntimedGame;
 public class BoardView extends JFrame implements Observer {
     private JLabel gameLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
+    private JLabel removeSimilarTile = new JLabel("Remove Similar Tile: 1");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
@@ -85,7 +86,7 @@ public class BoardView extends JFrame implements Observer {
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
         gameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         //Empty JLabels for formatting using GridLayout
-        header.add(new JLabel());
+        header.add(removeSimilarTile);
         header.add(new JLabel());
         header.add(new JLabel());
         header.add(new JLabel());
@@ -110,6 +111,7 @@ public class BoardView extends JFrame implements Observer {
     public void newGame(Boolean isTimed) {
         gameOver = false;
         rerollButton.setText("Reroll: 1");
+        removeSimilarTile.setText("Remove Similar Tile: 1");
 
         if (isTimed) {
             currentBoard = TimedGame.getInstance();
@@ -119,6 +121,7 @@ public class BoardView extends JFrame implements Observer {
         currentBoard.newGame();
         currentQueue = currentBoard.getQueue();
         currentQueue.setRerollLeft(1);
+        currentBoard.setRemoveTileLeft(1);
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
         currentBoard.updateGame();
@@ -268,12 +271,31 @@ public class BoardView extends JFrame implements Observer {
             if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
 
+            }else{
+                for(int x =0;x<9;x++){
+                    for(int y=0;y<9;y++){
+                        if(gameBoard[x][y].getText().equals(gameBoard[boardPosition.x][boardPosition.y].getText())){
+                            gameBoard[x][y].setBackground(defaultColor);
+                        }
+                    }
+                }
+                removeSimilarTile.setText("Remove Similar Tile: 0");
             }
+
+
+
 
         }
 
         public void mouseExited(MouseEvent e) {
-            gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+            for(int x =0;x<9;x++){
+                for(int y=0;y<9;y++){
+                    if(gameBoard[x][y].getText().equals(gameBoard[boardPosition.x][boardPosition.y].getText())){
+                        gameBoard[x][y].setBackground(defaultColor);
+                    }
+                }
+            }
+
         }
 
         public void mouseEntered(MouseEvent e) {
@@ -282,6 +304,19 @@ public class BoardView extends JFrame implements Observer {
                 queue[0].setBackground(randomColor);
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(randomColor);
             }
+           if(currentBoard.isOccupied(boardPosition.x, boardPosition.y) && !gameOver) {
+               Color randomColor = new Color((int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127), (int) ((Math.random() * 128) + 127));
+               if (currentBoard.getRemoveTileLeft() == 1) {
+                   for (int x = 0; x < 9; x++) {
+                       for (int y = 0; y < 9; y++) {
+                           if (gameBoard[x][y].getText().equals(gameBoard[boardPosition.x][boardPosition.y].getText())) {
+                               gameBoard[x][y].setBackground(randomColor);
+                           }
+                       }
+                   }
+
+               }
+           }
         }
 
     }

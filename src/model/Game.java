@@ -1,7 +1,6 @@
 package model;
 
 import java.util.Observable;
-import java.awt.Point;
 
 
 public abstract class Game extends Observable {
@@ -11,8 +10,7 @@ public abstract class Game extends Observable {
     private int score;
     private Tile[][] board;
     private TileQueue currentQueue;
-    private int hintsRemaining = 3;
-
+    private int removeTileLeft;
 
     Game(TileQueue queue) {
         currentQueue = queue;
@@ -20,7 +18,7 @@ public abstract class Game extends Observable {
         restartGame();
     }
 
-    void restartGame() {
+    void restartGame(){
         for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
             for (int j = 0; j < NUMBER_OF_ROWS; j++) {
                 board[i][j] = new Tile();
@@ -30,43 +28,12 @@ public abstract class Game extends Observable {
             }
         }
         score = 0;
-        hintsRemaining = 3;
     }
-
+    public void setRemoveTileLeft(int removeTileLeft){this.removeTileLeft=removeTileLeft;}
+    public int getRemoveTileLeft(){return removeTileLeft;}
     public void updateGame() {
         setChanged();
         notifyObservers(board);
-    }
-
-    public Point getHint() {
-
-        Point hintPoint = new Point(-1, -1);
-        if (hintsRemaining < 1) {
-            return hintPoint;
-        }
-        int tilesRemoved = -1;
-        for (int col = 0; col < NUMBER_OF_COLUMNS; col++) {
-            for (int row = 0; row < NUMBER_OF_ROWS; row++) {
-                if (board[col][row].isOccupied()) {
-                    continue;
-                }
-                if ((getSurroundingValues(col, row) % 10) == currentQueue.getNext()) {
-                    int tempRemoved = 0;
-                    for (int x = -1; x < 2; x++) {
-                        for (int y = -1; y < 2; y++) {
-                            if (!(col + x < 0 || col + x > 8 || row + y < 0 || row + y > 8) && board[col + x][row + y].isOccupied()) {
-                                tempRemoved++;
-                            }
-                        }
-                    }
-                    if(tempRemoved > tilesRemoved){
-                        tilesRemoved = tempRemoved;
-                        hintPoint.setLocation(col, row);
-                    }
-                }
-            }
-        }
-        return hintPoint;
     }
 
     public boolean isOccupied(int col, int row) {
@@ -78,6 +45,19 @@ public abstract class Game extends Observable {
 
         int surroundingTileSummation;
         if (board[col][row].isOccupied()) {
+            if(removeTileLeft==1) {
+                int removeNum = board[col][row].getNumber();
+                for (int x = 0; x < 9; x++) {
+                    for (int y = 0; y < 9; y++) {
+
+                        if (board[x][y].getNumber() == removeNum) {
+                            board[x][y].emptyTile();
+                        }
+
+                    }
+                }
+                removeTileLeft--;
+            }
             return false;
         }
         int removed = 0;
@@ -132,7 +112,7 @@ public abstract class Game extends Observable {
         return true;
     }
 
-    public TileQueue getQueue() {
+    public TileQueue getQueue(){
         return currentQueue;
     }
 

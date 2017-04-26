@@ -61,9 +61,6 @@ public class TileQueue extends Observable{
         throw new Error("There are not sufficient Tiles in the queue");
 
     }
-    int getNext(){
-        return numberQueue.get(0);
-    }
     private void enqueue() {
         numberQueue.add((int) (Math.random() * 10));
     }
