@@ -1,3 +1,4 @@
+High Score
 800,Mindy,2005-04-27
 640,Windingo,2009-11-12
 550,Ben,2017-04-16
@@ -8,3 +9,7 @@
 450,Wan,2008-10-08
 420,Jericho,2007-05-17
 360,Windy,2008-07-14
+Timed Score
+50,Blanchi,2006-05-15
+50,Windingo,2006-06-06
+200,Johnny,2005-05-05

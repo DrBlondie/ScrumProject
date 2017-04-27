@@ -9,9 +9,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Image;
-import java.awt.Cursor;
+//import java.awt.Toolkit;
+//import java.awt.Image;
+//import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -30,9 +30,9 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
-import java.io.*;
-import com.sun.media.sound.WaveFileReader;
-import sun.audio.*;
+//import java.io.*;
+//import com.sun.media.sound.WaveFileReader;
+//import sun.audio.*;
 
 import model.Game;
 import model.ScoreBoard;
@@ -78,11 +78,14 @@ public class BoardView extends JFrame implements Observer {
         timed.addActionListener(e -> newGame(true));
         JMenuItem untimed = new JMenuItem("New Untimed Game");
         untimed.addActionListener(e -> newGame(false));
-        JMenuItem scoreBoardMenu = new JMenuItem("Top 10 Most Points");
-        scoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores));
+        JMenuItem highScoreBoardMenu = new JMenuItem("Top 10 Most Points");
+        highScoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores, false));
+        JMenuItem timedScoreBoardMenu = new JMenuItem("Top 10 Least Time");
+        timedScoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores, true));
         game.add(untimed);
         game.add(timed);
-        game.add(scoreBoardMenu);
+        game.add(highScoreBoardMenu);
+        game.add(timedScoreBoardMenu);
         game.add(exit);
         gameMenu.add(game);
         setJMenuBar(gameMenu);
@@ -112,7 +115,7 @@ public class BoardView extends JFrame implements Observer {
         boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
-        makeEngaging();
+        //makeEngaging();
 
     }
 
@@ -238,24 +241,24 @@ public class BoardView extends JFrame implements Observer {
         return textField;
     }
 
-    private void makeEngaging(){
-        setupSound("/gameMusic.wav");
-        setupCursor("/mushroomIcon.png");
+    /*private void makeEngaging(){
+        //setupSound("/gameMusic.wav");
+        //setupCursor("/mushroomIcon.png");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = toolkit.getImage(getClass().getResource("/marioMainIcon.png"));
-        setIconImage(image);
+        //Image image = toolkit.getImage(getClass().getResource("/marioMainIcon.png"));
+        //setIconImage(image);
 
-    }
+    }*/
 
-    private void setupCursor(String fileName){
+    /*private void setupCursor(String fileName){
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Image image = toolkit.getImage(getClass().getResource(fileName));
         Point hotspot = new Point(3,3);
         Cursor cursor = toolkit.createCustomCursor(image, hotspot, "icon");
         setCursor(cursor);
-    }
+    }*/
 
-    private void setupSound(String fileName){
+    /*private void setupSound(String fileName){
         try {
             InputStream inputStream = getClass().getResourceAsStream(fileName);
             AudioStream audioStream = new AudioStream(inputStream);
@@ -264,7 +267,7 @@ public class BoardView extends JFrame implements Observer {
             JOptionPane.showMessageDialog(null, "Audio file not found!");
 
         }
-    }
+    }*/
 
     private Color getRandomMarioColor(){
         int randomNumber = (int)(Math.random()* 5);
@@ -283,7 +286,7 @@ public class BoardView extends JFrame implements Observer {
         return Color.WHITE;
     }
 
-    public void changeUI(){
+    /*public void changeUI(){
         int randomNumber = (int) (Math.random() * 4);
         switch(randomNumber){
             case 0 :
@@ -306,7 +309,7 @@ public class BoardView extends JFrame implements Observer {
                 setupSound("/pipe.wav");
                 break;
         }
-    }
+    }*/
 
 
 
@@ -331,12 +334,12 @@ public class BoardView extends JFrame implements Observer {
             }
             if (currentBoard.gameWin()) {
                 gameOver = true;
-                if (scores.isHighScore(currentBoard.getScore())) {
+                if (scores.betterThanTop(currentBoard.getScore(),false)) {
                     String name = JOptionPane.showInputDialog("You Win! New High Score! Please enter your name:");
                     while(name == null) {
                         name = JOptionPane.showInputDialog("Please enter a valid name:");
                     }
-                    scores.updateScores(name, currentBoard.getScore());
+                    scores.updateScores(name, currentBoard.getScore(), false);
                 } else {
                     JOptionPane.showMessageDialog(null, "You Win!");
                 }
@@ -349,7 +352,7 @@ public class BoardView extends JFrame implements Observer {
                 return;
             }
             if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
-                changeUI();
+                //changeUI();
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
 
             }else{
