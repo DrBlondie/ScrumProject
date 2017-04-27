@@ -16,13 +16,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,11 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
-
-import java.io.*;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 
 import model.Game;
 import model.ScoreBoard;
@@ -277,11 +275,10 @@ public class BoardView extends JFrame implements Observer {
     }
 
     private void setupSound(String fileName) {
+        URL temp = BoardView.class.getResource(fileName);
         try {
-            String path = getClass().getResource(fileName).getFile();
-            File file = new File(path);
             Clip myClip = AudioSystem.getClip();
-            AudioInputStream ais = AudioSystem.getAudioInputStream(file.toURI().toURL());
+            AudioInputStream ais = AudioSystem.getAudioInputStream(temp);
             myClip.open(ais);
             myClip.start();
         } catch (Exception e) {
