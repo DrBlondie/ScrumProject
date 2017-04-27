@@ -252,11 +252,11 @@ public class BoardView extends JFrame implements Observer {
     }
 
     private void makeEngaging() {
-        setupSound("/marioMusic.wav");
-        setupCursor("/mushroomIcon.png");
+        setupSound("/resources/marioMusic.wav");
+        setupCursor("/resources/mushroomIcon.png");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         try {
-            Image image = toolkit.getImage(getClass().getResource("/marioMainIcon.png"));
+            Image image = toolkit.getImage(getClass().getResource("/resources/marioMainIcon.png"));
             setIconImage(image);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Icon file not found!");
@@ -308,23 +308,23 @@ public class BoardView extends JFrame implements Observer {
         int randomNumber = (int) (Math.random() * 4);
         switch (randomNumber) {
             case 0:
-                setupCursor("/mushroomIcon.png");
-                setupSound("/mushroom.wav");
+                setupCursor("/resources/mushroomIcon.png");
+                setupSound("/resources/mushroom.wav");
                 break;
 
             case 1:
-                setupCursor("/coinIcon.gif");
-                setupSound("/coin.wav");
+                setupCursor("/resources/coinIcon.gif");
+                setupSound("/resources/coin.wav");
                 break;
 
             case 2:
-                setupCursor("/yoshiIcon.png");
-                setupSound("/yoshi.wav");
+                setupCursor("/resources/yoshiIcon.png");
+                setupSound("/resources/yoshi.wav");
                 break;
 
             case 3:
-                setupCursor("/pipeIcon.png");
-                setupSound("/pipe.wav");
+                setupCursor("/resources/pipeIcon.png");
+                setupSound("/resources/pipe.wav");
                 break;
 
             default:
