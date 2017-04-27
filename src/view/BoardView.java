@@ -36,14 +36,17 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import java.io.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 import model.Game;
 import model.ScoreBoard;
 import model.Tile;
 import model.TileQueue;
 import model.TimedGame;
 import model.UntimedGame;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 
 
 public class BoardView extends JFrame implements Observer {
@@ -249,7 +252,7 @@ public class BoardView extends JFrame implements Observer {
     }
 
     private void makeEngaging() {
-        setupSound("/gameMusic.wav");
+        setupSound("/marioMusic.wav");
         setupCursor("/mushroomIcon.png");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         try {
@@ -275,16 +278,19 @@ public class BoardView extends JFrame implements Observer {
 
     private void setupSound(String fileName) {
         try {
-            InputStream inputStream = getClass().getResourceAsStream(fileName);
-            AudioStream audioStream = new AudioStream(inputStream);
-            AudioPlayer.player.start(audioStream);
+            String path = getClass().getResource(fileName).getFile();
+            File file = new File(path);
+            Clip myClip = AudioSystem.getClip();
+            AudioInputStream ais = AudioSystem.getAudioInputStream(file.toURI().toURL());
+            myClip.open(ais);
+            myClip.start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Audio file not found!");
         }
     }
 
     private Color getRandomMarioColor() {
-        int randomNumber = (int) (Math.random() * 5);
+        int randomNumber = (int) (Math.random() * 4);
 
         switch (randomNumber) {
             case 0:
@@ -293,10 +299,8 @@ public class BoardView extends JFrame implements Observer {
                 return new Color(7, 201, 0);
             case 2:
                 return new Color(1, 223, 225);
-            case 3:
-                return new Color(247, 61, 67);
             default:
-                return Color.WHITE;
+                return new Color(247, 61, 67);
         }
     }
 
@@ -403,6 +407,7 @@ public class BoardView extends JFrame implements Observer {
                 currentHintTask = null;
             }
             if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
+                changeTheme();
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
             } else {
                 setCommonColor(defaultColor);
