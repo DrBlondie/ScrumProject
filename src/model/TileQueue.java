@@ -6,7 +6,7 @@ import java.util.Observable;
 import main.Main;
 
 
-public class TileQueue extends Observable{
+public class TileQueue extends Observable {
 
     private static final int MAX_SIZE = 5;
     private ArrayList<Integer> numberQueue = new ArrayList<>();
@@ -17,18 +17,20 @@ public class TileQueue extends Observable{
     TileQueue(boolean timed) {
 
         isTimed = timed;
+        populateQueue();
+        placedTileCount = 0;
+
+    }
+
+    private void populateQueue(){
         for (int i = 0; i < MAX_SIZE; i++) {
             numberQueue.add((int) (Math.random() * 10));
         }
 
-        placedTileCount = 0;
+    }
 
-    }
-    public void setRerollLeft(int rerollLeft){
-        this.rerollLeft = rerollLeft;
-    }
-    public void rerollQueue(){
-        if(rerollLeft>0) {
+    public void rerollQueue() {
+        if (rerollLeft > 0) {
             for (int i = 0; i < MAX_SIZE; i++) {
                 numberQueue.remove(0);
                 numberQueue.add((int) (Math.random() * 10));
@@ -40,11 +42,12 @@ public class TileQueue extends Observable{
     }
 
     public void updateGame() {
+        placedTileCount = 0;
+        rerollLeft = 1;
+        numberQueue.clear();
+        populateQueue();
         setChanged();
         notifyObservers(numberQueue);
-        placedTileCount = 0;
-        rerollLeft = 2;
-        rerollQueue();
     }
 
     private int dequeue() {
@@ -56,11 +59,9 @@ public class TileQueue extends Observable{
             return nextTile;
 
         }
-
-
         throw new Error("There are not sufficient Tiles in the queue");
-
     }
+
     private void enqueue() {
         numberQueue.add((int) (Math.random() * 10));
     }
@@ -75,6 +76,10 @@ public class TileQueue extends Observable{
         setChanged();
         notifyObservers(numberQueue);
         return value;
+    }
+
+    int getNext() {
+        return numberQueue.get(0);
     }
 
 }
