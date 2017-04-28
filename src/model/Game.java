@@ -118,7 +118,7 @@ public abstract class Game extends Observable {
         return true;
     }
 
-    private int getSurroundingValues(int col, int row) {
+    protected int getSurroundingValues(int col, int row) {
         int values = 0;
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
