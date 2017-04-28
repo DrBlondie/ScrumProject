@@ -11,7 +11,8 @@ public class performMoveValid {
     @BeforeClass
     public static void onlyOnce(){
         TileQueue testQueue = new TileQueue(false);
-
+        Tile[][] board = new Tile[9][9];
+        int row, column;
     }
 
     @Test
