@@ -10,6 +10,7 @@ public class performMoveValid {
 
     @BeforeClass
     public static void onlyOnce(){
+        TileQueue testQueue = new TileQueue(false);
 
     }
 
