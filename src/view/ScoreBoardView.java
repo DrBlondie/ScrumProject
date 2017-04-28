@@ -9,7 +9,7 @@ import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
-import model.ScoreBoard;
+import test.ScoreBoard;
 
 class ScoreBoardView extends JFrame implements Observer{
     private ScoreBoard scoreBoard;
