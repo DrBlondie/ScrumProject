@@ -39,12 +39,12 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
-import test.Game;
-import test.ScoreBoard;
-import test.Tile;
-import test.TileQueue;
-import test.TimedGame;
-import test.UntimedGame;
+import model.Game;
+import model.ScoreBoard;
+import model.Tile;
+import model.TileQueue;
+import model.TimedGame;
+import model.UntimedGame;
 
 
 public class BoardView extends JFrame implements Observer {
