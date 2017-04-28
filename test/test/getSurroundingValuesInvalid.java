@@ -1,4 +1,4 @@
-package model;
+package test;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import org.junit.Test;
 /**
  * Created by levin on 4/28/17.
  */
-public class getSurroundingValuesValid {
+public class getSurroundingValuesInvalid {
 
     @BeforeClass
     public static void onlyOnce(){
@@ -14,7 +14,6 @@ public class getSurroundingValuesValid {
         Tile[][] board = new Tile[9][9];
         int row, column;
     }
-
 
     @Test
     public void leftBorderValues() {
@@ -51,7 +50,6 @@ public class getSurroundingValuesValid {
     @Test
     public void interiorValues() {
     }
-
 
 
 }
