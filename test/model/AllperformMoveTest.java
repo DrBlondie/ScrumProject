@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({getSurroundingValuesInvalid.class, getSurroundingValuesValid.class,})
+@SuiteClasses({performMoveValid.class, performMoveInvalid.class,})
 
 public class AllperformMoveTest {
 }
