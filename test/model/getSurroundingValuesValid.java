@@ -2,7 +2,7 @@ package model;
 
 import org.junit.Test;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 
 public class getSurroundingValuesValid {
     private int NUMBER_OF_ROWS = 9;
@@ -13,8 +13,8 @@ public class getSurroundingValuesValid {
     private static Tile[][] board;
 
 
-    @BeforeClass
-    public static void setupBeforeClass(){
+    @Before
+    public void setup(){
         game = UntimedGame.getInstance();
         board = game.getBoard();
     }
@@ -74,7 +74,7 @@ public class getSurroundingValuesValid {
         expected += board[row - 1][col + 1].getNumber();
         expected += board[row + 1][col + 1].getNumber();
         expected += board[row][col + 1].getNumber();
-        result = game.getSurroundingValues(0, 5);
+        result = game.getSurroundingValues(5, 0);
 
         Assert.assertEquals(expected, result);
     }
@@ -89,7 +89,7 @@ public class getSurroundingValuesValid {
         expected += board[row - 1][col - 1].getNumber();
         expected += board[row + 1][col - 1].getNumber();
         expected += board[row][col - 1].getNumber();
-        result = game.getSurroundingValues(NUMBER_OF_COLUMNS - 1, 5);
+        result = game.getSurroundingValues(5, NUMBER_OF_ROWS - 1);
 
         Assert.assertEquals(expected, result);
     }
@@ -104,7 +104,7 @@ public class getSurroundingValuesValid {
         expected += board[row + 1][col - 1].getNumber();
         expected += board[row + 1][col].getNumber();
         expected += board[row + 1][col + 1].getNumber();
-        result = game.getSurroundingValues(5, 0);
+        result = game.getSurroundingValues(0, 5);
 
         Assert.assertEquals(expected, result);
     }
@@ -120,7 +120,7 @@ public class getSurroundingValuesValid {
         expected += board[row - 1][col - 1].getNumber();
         expected += board[row - 1][col].getNumber();
         expected += board[row - 1][col + 1].getNumber();
-        result = game.getSurroundingValues(0, NUMBER_OF_ROWS - 1);
+        result = game.getSurroundingValues(NUMBER_OF_COLUMNS - 1, 5);
 
         Assert.assertEquals(expected, result);
     }
