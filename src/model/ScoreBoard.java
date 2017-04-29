@@ -15,9 +15,7 @@ public class ScoreBoard implements Observable {
     private ArrayList<PlayerScore> playerTimedScores;
     private DateTimeFormatter dtf;
 
-
     private static final String SCORE_FILE = "scores.txt";
-
     private static final int MAX_SIZE = 10;
 
     public ScoreBoard() {
