@@ -35,14 +35,14 @@ public class UntimedGame extends Game {
             return false;
         } else {
             numberOfMoves++;
-            boolean move = performMove(col,row);
-            if(!move){
-                numberOfMoves--;
+            if (board[col][row].isOccupied()) {
+                return false;
             }
+            performMove(col,row);
+            numberOfMoves--;
             setChanged();
             notifyObservers(this.getBoard());
-            return move;
-
+            return true;
         }
     }
 

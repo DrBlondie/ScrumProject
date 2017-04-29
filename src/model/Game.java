@@ -9,7 +9,7 @@ public abstract class Game extends Observable {
     private static final int NUMBER_OF_ROWS = 9;
     private static final int NUMBER_OF_COLUMNS = 9;
     private int score;
-    private Tile[][] board;
+    Tile[][] board;
     private TileQueue currentQueue;
     private int removeTileLeft;
     private int hintsRemaining = 3;
@@ -79,24 +79,8 @@ public abstract class Game extends Observable {
     }
 
 
-    boolean performMove(int col, int row) {
+    void performMove(int col, int row) {
         int surroundingTileSummation;
-        if (board[col][row].isOccupied()) {
-            if (removeTileLeft == 1) {
-                int removeNum = board[col][row].getNumber();
-                for (int x = 0; x < 9; x++) {
-                    for (int y = 0; y < 9; y++) {
-
-                        if (board[x][y].getNumber() == removeNum) {
-                            board[x][y].emptyTile();
-                        }
-                    }
-                }
-                removeTileLeft--;
-            }
-            return false;
-        }
-
         int removed = 0;
         board[col][row].setNumber(currentQueue.placeTile());
         board[col][row].setOccupied(true);
@@ -115,10 +99,9 @@ public abstract class Game extends Observable {
                 score += 10 * removed;
             }
         }
-        return true;
     }
 
-    protected int getSurroundingValues(int col, int row) {
+    int getSurroundingValues(int col, int row) {
         int values = 0;
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
@@ -147,6 +130,24 @@ public abstract class Game extends Observable {
             }
         }
         return true;
+    }
+
+    public boolean removeCommonTiles(int col, int row) {
+        if (removeTileLeft == 1) {
+            int removeNum = board[col][row].getNumber();
+            for (int x = 0; x < 9; x++) {
+                for (int y = 0; y < 9; y++) {
+
+                    if (board[x][y].getNumber() == removeNum) {
+                        board[x][y].emptyTile();
+                    }
+                }
+            }
+            updateGame();
+            removeTileLeft--;
+            return true;
+        }
+        return false;
     }
 
     public TileQueue getQueue() {

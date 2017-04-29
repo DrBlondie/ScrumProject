@@ -403,12 +403,12 @@ public class BoardView extends JFrame implements Observer {
                 currentHintTask.cancel();
                 currentHintTask = null;
             }
-            if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
-                changeTheme();
-                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
-            } else {
+            if(currentBoard.isOccupied(boardPosition.x, boardPosition.y) && currentBoard.removeCommonTiles(boardPosition.x, boardPosition.y)){
                 setCommonColor(defaultColor);
                 removeSimilarTile.setText("Remove Similar Tile: 0");
+            }else if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
+                changeTheme();
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
             }
             if (currentBoard.gameWin()) {
                 gameOver = true;
