@@ -80,6 +80,9 @@ public abstract class Game extends Observable {
 
 
     void performMove(int col, int row) {
+        if(board[col][row].isOccupied()){
+            return;
+        }
         int surroundingTileSummation;
         int removed = 0;
         board[col][row].setNumber(currentQueue.placeTile());
@@ -103,21 +106,26 @@ public abstract class Game extends Observable {
 
     int getSurroundingValues(int col, int row) {
         int values = 0;
+        boolean emptyAround = true;
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
                 if (!(col + x < 0 || col + x > 8 || row + y < 0 || row + y > 8)) {
                     if ((x == 0 && y == 0) || !board[col + x][row + y].isOccupied()) {
                         continue;
                     }
+                    emptyAround = false;
                     values += board[col + x][row + y].getNumber();
                 }
             }
         }
+        if(emptyAround){
+            return -1;
+        }
         return values;
     }
 
-    private boolean isModulo(int row, int col, int surroundingTileSummation) {
-        return board[row][col].getNumber() == (surroundingTileSummation % 10);
+    private boolean isModulo(int col, int row, int surroundingTileSummation) {
+        return board[col][row].getNumber() == (surroundingTileSummation % 10);
     }
 
 
