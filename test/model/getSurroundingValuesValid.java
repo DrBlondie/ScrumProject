@@ -1,28 +1,22 @@
 package model;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 
-/**
- * Created by levin on 4/28/17.
- */
 public class getSurroundingValuesValid {
     private int NUMBER_OF_ROWS = 9;
     private int NUMBER_OF_COLUMNS = 9;
     private int expected;
     private int result;
-    private Game game;
-    private Tile[][] board;
+    private static Game game;
+    private static Tile[][] board;
 
 
     @BeforeClass
     public static void setupBeforeClass(){
-        Game game = UntimedGame.getInstance();
-        Tile[][] board = game.getBoard();
-
-
+        game = UntimedGame.getInstance();
+        board = game.getBoard();
     }
 
     @Test
@@ -34,7 +28,6 @@ public class getSurroundingValuesValid {
         result = game.getSurroundingValues(0,0);
 
         Assert.assertEquals(expected,result);
-
     }
 
     @Test
@@ -58,7 +51,6 @@ public class getSurroundingValuesValid {
         result= game.getSurroundingValues(0 ,NUMBER_OF_ROWS - 1);
 
         Assert.assertEquals(expected,result);
-
     }
 
     @Test
@@ -70,7 +62,6 @@ public class getSurroundingValuesValid {
         result= game.getSurroundingValues(NUMBER_OF_COLUMNS - 1 ,NUMBER_OF_ROWS - 1);
 
         Assert.assertEquals(expected,result);
-
     }
 
     @Test
