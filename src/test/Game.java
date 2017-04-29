@@ -80,7 +80,6 @@ public abstract class Game extends Observable {
 
 
     boolean performMove(int col, int row) {
-
         int surroundingTileSummation;
         if (board[col][row].isOccupied()) {
             if (removeTileLeft == 1) {
@@ -91,13 +90,13 @@ public abstract class Game extends Observable {
                         if (board[x][y].getNumber() == removeNum) {
                             board[x][y].emptyTile();
                         }
-
                     }
                 }
                 removeTileLeft--;
             }
             return false;
         }
+
         int removed = 0;
         board[col][row].setNumber(currentQueue.placeTile());
         board[col][row].setOccupied(true);

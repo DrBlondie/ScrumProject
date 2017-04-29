@@ -1,22 +1,40 @@
 package test;
 
-import org.junit.BeforeClass;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by levin on 4/28/17.
- */
 public class performMoveValid {
+    private Tile[][] board;
+    private Game game;
+    private int row, column;
+    private boolean expected, result;
 
-    @BeforeClass
-    public static void onlyOnce(){
-        TileQueue testQueue = new TileQueue(false);
-        Tile[][] board = new Tile[9][9];
-        int row, column;
+    @Before
+    public void setup(){
+        game = UntimedGame.getInstance();
+        board = game.getBoard();
     }
 
     @Test
-    public void getSurroundingValues() {
+    public void testPerformMoveFor_A() {
+        row = 0;
+        column = 0;
+
+        result = game.performMove(column,row);
+        expected = board[column][row].isOccupied();
+
+        Assert.assertEquals(expected, result);
     }
 
+    @Test
+    public void testPerformMoveFor_B() {
+        row = 4;
+        column = 4;
+
+        result = game.performMove(column, row);
+        expected = board[column][row].isOccupied();
+
+        Assert.assertEquals(expected, result);
+    }
 }
