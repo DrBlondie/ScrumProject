@@ -2,21 +2,30 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
-//import java.awt.Toolkit;
-//import java.awt.Image;
-//import java.awt.Cursor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,16 +39,12 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
-//import java.io.*;
-//import com.sun.media.sound.WaveFileReader;
-//import sun.audio.*;
-
-import model.Game;
-import model.ScoreBoard;
-import model.Tile;
-import model.TileQueue;
-import model.TimedGame;
-import model.UntimedGame;
+import test.Game;
+import test.ScoreBoard;
+import test.Tile;
+import test.TileQueue;
+import test.TimedGame;
+import test.UntimedGame;
 
 
 public class BoardView extends JFrame implements Observer {
@@ -56,6 +61,10 @@ public class BoardView extends JFrame implements Observer {
     private TileQueue currentQueue;
     private ScoreBoard scores;
     private boolean gameOver = false;
+    private Timer hintTimer = new Timer();
+    private Color hintColor = new Color(150, 0, 150);
+    private TimerTask currentHintTask;
+    private JButton hintButton = new JButton("Hints: 3");
 
     public BoardView() {
         setBackground(defaultColor);
@@ -73,19 +82,19 @@ public class BoardView extends JFrame implements Observer {
         JMenuBar gameMenu = new JMenuBar();
         JMenu game = new JMenu("Game");
         JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(e -> System.exit(0));
+        exit.addActionListener(new ItemClickListener("exit"));
         JMenuItem timed = new JMenuItem("New Timed Game");
-        timed.addActionListener(e -> newGame(true));
+        timed.addActionListener(new ItemClickListener("timed"));
         JMenuItem untimed = new JMenuItem("New Untimed Game");
-        untimed.addActionListener(e -> newGame(false));
-        JMenuItem highScoreBoardMenu = new JMenuItem("Top 10 Most Points");
-        highScoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores, false));
-        JMenuItem timedScoreBoardMenu = new JMenuItem("Top 10 Least Time");
-        timedScoreBoardMenu.addActionListener(e -> new ScoreBoardView(scores, true));
+        untimed.addActionListener(new ItemClickListener("untimed"));
+        JMenuItem scoreBoardMenu = new JMenuItem("Top 10 Most Points");
+        scoreBoardMenu.addActionListener(new ItemClickListener("topPoints"));
+        JMenuItem timeBoardMenu = new JMenuItem("Top 10 Fastest Times");
+        timeBoardMenu.addActionListener(new ItemClickListener("topTime"));
         game.add(untimed);
         game.add(timed);
-        game.add(highScoreBoardMenu);
-        game.add(timedScoreBoardMenu);
+        game.add(scoreBoardMenu);
+        game.add(timeBoardMenu);
         game.add(exit);
         gameMenu.add(game);
         setJMenuBar(gameMenu);
@@ -115,7 +124,7 @@ public class BoardView extends JFrame implements Observer {
         boardPanel.setBackground(defaultColor);
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
-        //makeEngaging();
+        makeEngaging();
 
     }
 
@@ -131,8 +140,6 @@ public class BoardView extends JFrame implements Observer {
         }
         currentBoard.newGame();
         currentQueue = currentBoard.getQueue();
-        currentQueue.setRerollLeft(1);
-        currentBoard.setRemoveTileLeft(1);
         currentBoard.addObserver(this);
         currentQueue.addObserver(this);
         currentBoard.updateGame();
@@ -152,8 +159,7 @@ public class BoardView extends JFrame implements Observer {
                 final Point boardPosition = new Point(x, y);
                 gameBoard[x][y] = getNewTextField();
                 gameBoard[x][y].setBackground(defaultColor);
-
-                gameBoard[x][y].addMouseListener(new MouseClick(boardPosition));
+                gameBoard[x][y].addMouseListener(new BoardClick(boardPosition));
                 c.gridx = x * 90;
                 c.gridy = y;
                 playField.add(gameBoard[x][y], c);
@@ -163,7 +169,6 @@ public class BoardView extends JFrame implements Observer {
 
 
     private void buildQueueBox() {
-
         queueBox.setLayout(new GridBagLayout());
         queueBox.setBackground(defaultColor);
         GridBagConstraints c = new GridBagConstraints();
@@ -172,12 +177,16 @@ public class BoardView extends JFrame implements Observer {
         c.gridx = 0;
         c.gridwidth = 50;
         c.insets = new Insets(0, 0, 0, 0);
+        queueBox.add(hintButton, c);
+        hintButton.addActionListener(new ItemClickListener("hint"));
+        c.gridy++;
         queueBox.add(rerollButton, c);
-        rerollButton.addMouseListener(new ButtonClick());
+        c.gridy++;
+        rerollButton.addActionListener(new ItemClickListener("reroll"));
         for (int i = 0; i < queue.length; i++) {
             queue[i] = getNewTextField();
             queue[i].setBackground(defaultColor);
-            c.gridy = i + 1;
+            c.gridy++;
             queueBox.add(queue[i], c);
         }
     }
@@ -198,7 +207,6 @@ public class BoardView extends JFrame implements Observer {
 
                 for (i = 0; i < numberQueue.size() && i < queue.length; i++) {
                     queue[i].setText(numberQueue.get(i).toString());
-
                 }
                 for (; i < queue.length; i++) {
                     queue[i].setText("");
@@ -241,167 +249,211 @@ public class BoardView extends JFrame implements Observer {
         return textField;
     }
 
-    /*private void makeEngaging(){
-        //setupSound("/gameMusic.wav");
-        //setupCursor("/mushroomIcon.png");
+    private void makeEngaging() {
+        setupSound("/resources/marioMusic.wav");
+        setupCursor("/resources/mushroomIcon.png");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        //Image image = toolkit.getImage(getClass().getResource("/marioMainIcon.png"));
-        //setIconImage(image);
-
-    }*/
-
-    /*private void setupCursor(String fileName){
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = toolkit.getImage(getClass().getResource(fileName));
-        Point hotspot = new Point(3,3);
-        Cursor cursor = toolkit.createCustomCursor(image, hotspot, "icon");
-        setCursor(cursor);
-    }*/
-
-    /*private void setupSound(String fileName){
         try {
-            InputStream inputStream = getClass().getResourceAsStream(fileName);
-            AudioStream audioStream = new AudioStream(inputStream);
-            AudioPlayer.player.start(audioStream);
+            Image image = toolkit.getImage(getClass().getResource("/resources/marioMainIcon.png"));
+            setIconImage(image);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Icon file not found!");
+        }
+
+    }
+
+    private void setupCursor(String fileName) {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        try {
+            Image image = toolkit.getImage(getClass().getResource(fileName));
+            Point hotspot = new Point(3, 3);
+            Cursor cursor = toolkit.createCustomCursor(image, hotspot, "icon");
+            setCursor(cursor);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Cursor file not found!");
+        }
+    }
+
+    private void setupSound(String fileName) {
+        URL temp = BoardView.class.getResource(fileName);
+        try {
+            Clip myClip = AudioSystem.getClip();
+            AudioInputStream ais = AudioSystem.getAudioInputStream(temp);
+            myClip.open(ais);
+            myClip.start();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Audio file not found!");
-
         }
-    }*/
+    }
 
-    private Color getRandomMarioColor(){
-        int randomNumber = (int)(Math.random()* 5);
+    private Color getRandomMarioColor() {
+        int randomNumber = (int) (Math.random() * 4);
 
-        switch(randomNumber) {
+        switch (randomNumber) {
             case 0:
                 return new Color(242, 208, 49);
             case 1:
                 return new Color(7, 201, 0);
             case 2:
                 return new Color(1, 223, 225);
-            case 3:
+            default:
                 return new Color(247, 61, 67);
         }
-
-        return Color.WHITE;
     }
 
-    /*public void changeUI(){
+    private void changeTheme() {
         int randomNumber = (int) (Math.random() * 4);
-        switch(randomNumber){
-            case 0 :
-                setupCursor("/mushroomIcon.png");
-                setupSound("/mushroom.wav");
+        switch (randomNumber) {
+            case 0:
+                setupCursor("/resources/mushroomIcon.png");
+                setupSound("/resources/mushroom.wav");
                 break;
 
-            case 1 :
-                setupCursor("/coinIcon.gif");
-                setupSound("/coin.wav");
+            case 1:
+                setupCursor("/resources/coinIcon.gif");
+                setupSound("/resources/coin.wav");
                 break;
 
             case 2:
-                setupCursor("/yoshiIcon.png");
-                setupSound("/yoshi.wav");
+                setupCursor("/resources/yoshiIcon.png");
+                setupSound("/resources/yoshi.wav");
                 break;
 
             case 3:
-                setupCursor("/pipeIcon.png");
-                setupSound("/pipe.wav");
+                setupCursor("/resources/pipeIcon.png");
+                setupSound("/resources/pipe.wav");
                 break;
-        }
-    }*/
 
-
-
-    private class ButtonClick extends MouseAdapter {
-        public void mouseClicked(MouseEvent e) {
-            currentQueue.rerollQueue();
-            rerollButton.setText("Reroll: 0");
-
+            default:
+                break;
         }
     }
 
-    private class MouseClick extends MouseAdapter {
+
+    private class ItemClickListener implements ActionListener {
+        private String clicked;
+
+        ItemClickListener(String clicked) {
+            this.clicked = clicked;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            switch (clicked) {
+                case "exit":
+                    System.exit(1);
+                    break;
+                case "reroll":
+                    currentQueue.rerollQueue();
+                    rerollButton.setText("Reroll: 0");
+                    break;
+                case "hint":
+                    Point hintPoint = currentBoard.getHint();
+                    if (hintPoint.x == -1 && hintPoint.y == -1) {
+                        JOptionPane.showMessageDialog(null, "There is no place for you to place the next value.");
+                        break;
+                    }
+                    if (currentHintTask != null) {
+                        JOptionPane.showMessageDialog(null, "Hint already displayed.");
+                        break;
+                    }
+                    currentHintTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (gameBoard[hintPoint.x][hintPoint.y].getBackground() == hintColor) {
+                                gameBoard[hintPoint.x][hintPoint.y].setBackground(defaultColor);
+                            } else {
+                                gameBoard[hintPoint.x][hintPoint.y].setBackground(hintColor);
+                            }
+                        }
+                    };
+
+                    hintTimer.scheduleAtFixedRate(currentHintTask, Calendar.getInstance().getTime(), 250L);
+                    break;
+                case "timed":
+                    newGame(true);
+                    break;
+                case "untimed":
+                    newGame(false);
+                    break;
+                case "topPoints":
+                    new ScoreBoardView(scores, false);
+                    break;
+                case "topTime":
+                    new ScoreBoardView(scores, true);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    private class BoardClick extends MouseAdapter {
         private Point boardPosition;
 
-        MouseClick(Point position) {
+        BoardClick(Point position) {
             boardPosition = position;
         }
 
         public void mouseClicked(MouseEvent e) {
-            if(gameOver){
+            if (gameOver) {
                 return;
+            }
+            if (currentHintTask != null) {
+                currentHintTask.cancel();
+                currentHintTask = null;
+            }
+            if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
+                changeTheme();
+                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
+            } else {
+                setCommonColor(defaultColor);
+                removeSimilarTile.setText("Remove Similar Tile: 0");
             }
             if (currentBoard.gameWin()) {
                 gameOver = true;
-                if (scores.betterThanTop(currentBoard.getScore(),false)) {
-                    String name = JOptionPane.showInputDialog("You Win! New High Score! Please enter your name:");
-                    while(name == null) {
-                        name = JOptionPane.showInputDialog("Please enter a valid name:");
+                if (scores.betterThanTop(currentBoard.getScore(), false)) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "You Win! Would you like to add your name to the high score list?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        String name = JOptionPane.showInputDialog("You Win! New High Score! Please enter your name:");
+
+                        scores.updateScores(name, currentBoard.getScore(), false);
                     }
-                    scores.updateScores(name, currentBoard.getScore(), false);
                 } else {
                     JOptionPane.showMessageDialog(null, "You Win!");
                 }
-                return;
-            }
-            if(currentBoard.gameOver()){
+            } else if (currentBoard.gameOver()) {
                 gameOver = true;
                 JOptionPane.showMessageDialog(null, "You Lose. Please try again.");
-
-                return;
             }
-            if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
-                //changeUI();
-                gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
-
-            }else{
-                for(int x =0;x<9;x++){
-                    for(int y=0;y<9;y++){
-                        if(gameBoard[x][y].getText().equals(gameBoard[boardPosition.x][boardPosition.y].getText())){
-                            gameBoard[x][y].setBackground(defaultColor);
-                        }
-                    }
-                }
-                removeSimilarTile.setText("Remove Similar Tile: 0");
-            }
-
-
-
-
         }
 
         public void mouseExited(MouseEvent e) {
-            for(int x =0;x<9;x++){
-                for(int y=0;y<9;y++){
-                    if(gameBoard[x][y].getText().equals(gameBoard[boardPosition.x][boardPosition.y].getText())){
-                        gameBoard[x][y].setBackground(defaultColor);
-                    }
-                }
-            }
-
+            setCommonColor(defaultColor);
         }
 
         public void mouseEntered(MouseEvent e) {
-            if (!currentBoard.isOccupied(boardPosition.x, boardPosition.y) && !gameOver) {
-                Color randomColor = getRandomMarioColor();
+            if (gameOver) {
+                return;
+            }
+            Color randomColor = getRandomMarioColor();
+            if (!currentBoard.isOccupied(boardPosition.x, boardPosition.y)) {
                 queue[0].setBackground(randomColor);
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(randomColor);
+            } else if (currentBoard.getRemoveTileLeft() == 1) {
+                setCommonColor(randomColor);
             }
-           if(currentBoard.isOccupied(boardPosition.x, boardPosition.y) && !gameOver) {
-               Color randomColor = getRandomMarioColor();
-               if (currentBoard.getRemoveTileLeft() == 1) {
-                   for (int x = 0; x < 9; x++) {
-                       for (int y = 0; y < 9; y++) {
-                           if (gameBoard[x][y].getText().equals(gameBoard[boardPosition.x][boardPosition.y].getText())) {
-                               gameBoard[x][y].setBackground(randomColor);
-                           }
-                       }
-                   }
-
-               }
-           }
         }
 
+        private void setCommonColor(Color changeColor) {
+            String text = gameBoard[boardPosition.x][boardPosition.y].getText();
+            for (int x = 0; x < 9; x++) {
+                for (int y = 0; y < 9; y++) {
+                    if (gameBoard[x][y].getText().equals(text)) {
+                        gameBoard[x][y].setBackground(changeColor);
+                    }
+                }
+            }
+        }
     }
 }
