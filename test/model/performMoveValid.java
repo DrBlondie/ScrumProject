@@ -8,7 +8,7 @@ public class performMoveValid {
     private Tile[][] board;
     private Game game;
     private int row, column;
-    private boolean expected, result;
+    private int expected, result;
 
     @Before
     public void setup(){
@@ -20,9 +20,12 @@ public class performMoveValid {
     public void testPerformMoveFor_A() {
         row = 0;
         column = 0;
-        System.out.println("testPerformMOve A");
+
+        board[column][row - 1].setNumber(1);
+        board[column + 1][row + 1].setNumber(1);
+        board[column + 1][row].setNumber(1);
         //result = game.performMove(column,row);
-        expected = board[column][row].isOccupied();
+        //expected = board[column][row].isOccupied();
 
         Assert.assertEquals(expected, result);
     }
@@ -32,9 +35,9 @@ public class performMoveValid {
         row = 4;
         column = 4;
 
-        System.out.println("testPerformMOve B");
-        //result = game.performMove(column, row);
-        expected = board[column][row].isOccupied();
+        expected = board[column][row].getNumber();
+        game.performMove(column, row);
+        result = board[column][row].getNumber();
 
         Assert.assertEquals(expected, result);
     }
