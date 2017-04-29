@@ -34,6 +34,7 @@ public abstract class Game extends Observable {
         removeTileLeft = 1;
     }
 
+
     public Point getHint() {
         Point hintPoint = new Point(-1, -1);
         if (hintsRemaining < 1) {
