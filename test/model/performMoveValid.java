@@ -21,11 +21,22 @@ public class performMoveValid {
         row = 0;
         column = 0;
 
-        board[column][row - 1].setNumber(1);
-        board[column + 1][row + 1].setNumber(1);
         board[column + 1][row].setNumber(1);
-        //result = game.performMove(column,row);
-        //expected = board[column][row].isOccupied();
+        board[column + 1][row + 1].setNumber(1);
+        board[column][row + 1].setNumber(1);
+        TileQueue queue = game.getQueue();
+        int next = queue.getNext();
+
+        if(next == 3){
+            expected = 0;
+            game.performMove(row, column);
+            result = board[column][row].getNumber();
+        }
+        else{
+            expected = next;
+            game.performMove(row, column);
+            result = board[column][row].getNumber();
+        }
 
         Assert.assertEquals(expected, result);
     }
