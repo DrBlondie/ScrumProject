@@ -34,8 +34,7 @@ class ScoreBoardView extends JFrame implements Observer{
         if(isTimedScore) {
             setTitle("Top Ten Least Time");
             columnNames[0] = "Time Taken";
-        }
-        else{
+        }else{
             setTitle("Top Ten Most Points");
             columnNames[0] = "Score";
         }

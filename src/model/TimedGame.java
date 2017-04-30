@@ -51,18 +51,20 @@ public class TimedGame extends Game {
 
     @Override
     public boolean checkMove(int col, int row) {
-        if (board[col][row].isOccupied()) {
+        if (timeUsed >= Main.MAX_TIME || board[col][row].isOccupied()) {
             return false;
         }
         performMove(col, row);
-        setChanged();
-        notifyObservers(this.getBoard());
         return timeUsed < Main.MAX_TIME;
     }
 
     @Override
     public boolean gameOver() {
         return timeUsed >= Main.MAX_TIME;
+    }
+
+    public int getTimeUsed(){
+        return timeUsed;
     }
 
 }

@@ -347,13 +347,18 @@ public class BoardView extends JFrame implements Observer {
                     rerollButton.setText("Reroll: 0");
                     break;
                 case "hint":
-                    Point hintPoint = currentBoard.getHint();
-                    if (hintPoint.x == -1 && hintPoint.y == -1) {
-                        JOptionPane.showMessageDialog(null, "There is no place for you to place the next value.");
-                        break;
-                    }
                     if (currentHintTask != null) {
                         JOptionPane.showMessageDialog(null, "Hint already displayed.");
+                        break;
+                    }
+                    Point hintPoint = currentBoard.getHint();
+                    hintButton.setText("Hints: " + currentBoard.getHintsRemaining());
+                    if(hintPoint == null){
+                        JOptionPane.showMessageDialog(null, "No hints remaining.");
+                        break;
+                    }
+                    if (hintPoint.x == -1 && hintPoint.y == -1) {
+                        JOptionPane.showMessageDialog(null, "There is no place for you to place the next value.");
                         break;
                     }
                     currentHintTask = new TimerTask() {
@@ -403,25 +408,31 @@ public class BoardView extends JFrame implements Observer {
                 currentHintTask.cancel();
                 currentHintTask = null;
             }
-            if(currentBoard.isOccupied(boardPosition.x, boardPosition.y) && currentBoard.removeCommonTiles(boardPosition.x, boardPosition.y)){
+            if (currentBoard.isOccupied(boardPosition.x, boardPosition.y) && currentBoard.removeCommonTiles(boardPosition.x, boardPosition.y)) {
                 setCommonColor(defaultColor);
                 removeSimilarTile.setText("Remove Similar Tile: 0");
-            }else if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
+            } else if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
                 changeTheme();
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);
             }
             if (currentBoard.gameWin()) {
                 gameOver = true;
+                boolean highScore = false;
                 if (scores.betterThanTop(currentBoard.getScore(), false)) {
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "You Win! Would you like to add your name to the high score list?", "Warning", JOptionPane.YES_NO_OPTION);
-                    if (dialogResult == JOptionPane.YES_OPTION) {
-                        String name = JOptionPane.showInputDialog("You Win! New High Score! Please enter your name:");
-
-                        scores.updateScores(name, currentBoard.getScore(), false);
+                    highScore = true;
+                    updateHighSores(false, "most points", currentBoard.getScore());
+                }
+                if(currentBoard.getClass().getSimpleName().equals("TimedGame")){
+                    int timeUsed = ((TimedGame)currentBoard).getTimeUsed();
+                    if (scores.betterThanTop(timeUsed, true)) {
+                        updateHighSores(true, "fastest times", timeUsed);
+                        return;
                     }
-                } else {
+                }
+                if(!highScore){
                     JOptionPane.showMessageDialog(null, "You Win!");
                 }
+
             } else if (currentBoard.gameOver()) {
                 gameOver = true;
                 JOptionPane.showMessageDialog(null, "You Lose. Please try again.");
@@ -453,6 +464,22 @@ public class BoardView extends JFrame implements Observer {
                         gameBoard[x][y].setBackground(changeColor);
                     }
                 }
+            }
+        }
+
+        private String getHighScoreWinner(String type) {
+            String name = "";
+            int dialogResult = JOptionPane.showConfirmDialog(null, "You Win! Would you like to add your name to the high score list of " + type + "?", "You WIN!", JOptionPane.YES_NO_OPTION);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                name = JOptionPane.showInputDialog("You Win! New High Score! Please enter your name:");
+            }
+            return name;
+        }
+
+        private void updateHighSores(boolean isTimed, String type, int value) {
+            String winner = getHighScoreWinner(type);
+            if (!winner.equals("")) {
+                scores.updateScores(winner, value, isTimed);
             }
         }
     }

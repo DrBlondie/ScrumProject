@@ -1,19 +1,22 @@
 package model;
-
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 
 public class ScoreBoard implements Observable {
     private ArrayList<PlayerScore> playerHighScores;
     private ArrayList<PlayerScore> playerTimedScores;
     private DateTimeFormatter dtf;
+
+
+    private static final int SCORE_INDEX = 0;
+    private static final int NAME_INDEX = 1;
+    private static final int DATE_INDEX = 2;
 
     private static final String SCORE_FILE = "scores.txt";
     private static final int MAX_SIZE = 10;
@@ -30,17 +33,23 @@ public class ScoreBoard implements Observable {
     }
 
     public boolean betterThanTop(int score, boolean isTimedScore) {
-        if (isTimedScore) {
+        if (!isTimedScore) {
+            if(playerHighScores.size() == 0){
+                return true;
+            }
             for (PlayerScore highScores : playerHighScores) {
                 if (score > highScores.getScore()) {
                     return true;
                 }
             }
-            return false;
-        }
-        for (PlayerScore highScores : playerTimedScores) {
-            if (score < highScores.getScore()) {
+        }else {
+            if(playerTimedScores.size() == 0){
                 return true;
+            }
+            for (PlayerScore highScores : playerTimedScores) {
+                if (score < highScores.getScore()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -80,9 +89,6 @@ public class ScoreBoard implements Observable {
     private void addScore(String scoreInformation, boolean isTimedScore) {
         String[] scoreInfo = scoreInformation.split(",");
         try {
-            final int SCORE_INDEX = 0;
-            final int NAME_INDEX = 1;
-            final int DATE_INDEX = 2;
 
             int score = Integer.parseInt(scoreInfo[SCORE_INDEX]);
             String name = scoreInfo[NAME_INDEX];
@@ -140,15 +146,18 @@ public class ScoreBoard implements Observable {
         }
 
         PlayerScore currentPlayerScore = playerHighScores.get(position);
+        String score = currentPlayerScore.getScore() + "";
         if (isTimedGame) {
             currentPlayerScore = playerTimedScores.get(position);
+            int timeTaken = currentPlayerScore.getScore();
+            score = (timeTaken / 60) + ":" + String.format("%02d", (timeTaken % 60));
+
         }
 
-        int score = currentPlayerScore.getScore();
         String name = currentPlayerScore.getName();
         LocalDate date = currentPlayerScore.getDate();
 
-        return new String[]{"" + score, name, dtf.format(date)};
+        return new String[]{score, name, dtf.format(date)};
     }
 
     private void ensureCapacity() {

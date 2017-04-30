@@ -38,7 +38,7 @@ public abstract class Game extends Observable {
     public Point getHint() {
         Point hintPoint = new Point(-1, -1);
         if (hintsRemaining < 1) {
-            return hintPoint;
+            return null;
         }
         int tilesRemoved = -1;
         for (int col = 0; col < NUMBER_OF_COLUMNS; col++) {
@@ -62,7 +62,12 @@ public abstract class Game extends Observable {
                 }
             }
         }
+        hintsRemaining--;
         return hintPoint;
+    }
+
+    public int getHintsRemaining(){
+        return hintsRemaining;
     }
 
     public int getRemoveTileLeft() {
@@ -101,6 +106,7 @@ public abstract class Game extends Observable {
                 score += 10 * removed;
             }
         }
+        updateGame();
     }
 
     int getSurroundingValues(int col, int row) {
@@ -177,6 +183,17 @@ public abstract class Game extends Observable {
     public abstract boolean gameOver();
 
     public abstract void newGame();
+
+    public void seedGame(){
+        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+            for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
+                board[i][j].emptyTile();
+            }
+        }
+        board[4][4].setOccupied(true);
+        board[4][4].setNumber(currentQueue.getNext());
+        updateGame();
+    }
 
 
 }
