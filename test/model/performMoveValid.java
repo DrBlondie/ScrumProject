@@ -16,7 +16,7 @@ public class performMoveValid {
     }
 
     @Test
-    public void testPerformMoveFor_A() {
+    public void testPerformMoveFor_PlaceInEmptyTile() {
         row = 0;
         column = 0;
 
@@ -28,22 +28,14 @@ public class performMoveValid {
         TileQueue queue = game.getQueue();
         int next = queue.getNext();
 
-        boolean expected;
-        boolean result;
-
-        if(next == 1){
-            expected = false;
-        }
-        else{
-            expected = true;
-        }
+        boolean expected = !(next == 1);
         game.performMove(row, column);
-        result = board[column][row].isOccupied();
+        boolean result = board[column][row].isOccupied();
         Assert.assertEquals(expected, result);
     }
 
     @Test
-    public void testPerformMoveFor_B() {
+    public void testPerformMoveFor_PlaceInFilledTile() {
         row = 4;
         column = 4;
 

@@ -1,34 +1,39 @@
 package model;
 
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class performMoveInvalid {
-
-    private Tile[][] board;
-    private Game game;
+    private static Game game;
     private int row, column;
-    private int expected, result;
 
-    @Before
-    public void setup(){
+    @BeforeClass
+    public static void setup(){
         game = UntimedGame.getInstance();
-        board = game.getBoard();
     }
 
     @Test
-    public void testPerformMoveFor_A() {
-        row = 0;
-        column = 0;
+    public void testPerformMoveFor_InvalidRowAndColumn() {
+        row = -1;
+        column = 9;
 
-        board[column][row - 1].setNumber(1);
-        board[column + 1][row + 1].setNumber(1);
-        board[column + 1][row].setNumber(1);
+        game.performMove(column, row);
+    }
 
+    @Test
+    public void testPerformMoveFor_InvalidRow() {
+        row = 8;
+        column = 9;
 
-        Assert.assertEquals(expected, result);
+        game.performMove(column, row);
+    }
+
+    @Test
+    public void testPerformMoveFor_InvalidColumn() {
+        row = -1;
+        column = 8;
+
+        game.performMove(column, row);
     }
 
 }
