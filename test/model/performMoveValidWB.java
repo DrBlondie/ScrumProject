@@ -17,7 +17,7 @@ public class performMoveValidWB {
     }
 
     @Test
-    public void testPerformMoveFor_PathO() {
+    public void testPerformMoveFor_PathInvalidRowOrColumn() {
         row = 5;
         column = -1;
 
@@ -27,7 +27,7 @@ public class performMoveValidWB {
     }
 
     @Test
-    public void testPerformMoveFor_PathABN() {
+    public void testPerformMoveFor_PathTileIsNotModulo() {
         row = 0;
         column = 0;
         board[column + 1][row].setNumber(0);
@@ -53,7 +53,7 @@ public class performMoveValidWB {
     }
 
     @Test
-    public void testPerformMoveFor_PathABCDEFGHIJM(){
+    public void testPerformMoveFor_PathRemoveLessThan3Tiles(){
         row = 0;
         column = 0;
 
@@ -78,7 +78,7 @@ public class performMoveValidWB {
     }
 
     @Test
-    public void testPerformMoveFor_PathABCDEFGHIJKL(){
+    public void testPerformMoveFor_PathRemove3OrMoreTiles(){
         row = 0;
         column = 0;
         board[column + 1][row].setNumber(0);
