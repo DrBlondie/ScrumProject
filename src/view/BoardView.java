@@ -135,7 +135,10 @@ public class BoardView extends JFrame implements Observer {
         gameOver = false;
         rerollButton.setText("Reroll: 1");
         removeSimilarTile.setText("<html><body style ='text-align: center'>Remove Similar<br>Tiles: 1</html>");
-        hintButton.setText("Hints: 3");
+        if (currentHintTask != null) {
+            currentHintTask.cancel();
+            currentHintTask = null;
+        }
 
         if (isTimed) {
             currentBoard = TimedGame.getInstance();
@@ -148,6 +151,8 @@ public class BoardView extends JFrame implements Observer {
         currentQueue.addObserver(this);
         currentBoard.updateGame();
         currentQueue.updateGame();
+
+        hintButton.setText("Hints: " + currentBoard.getHintsRemaining());
     }
 
     private void buildPlayField() {
