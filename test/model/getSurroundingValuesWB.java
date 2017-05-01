@@ -3,9 +3,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-/**
- * Created by levin on 5/1/17.
- */
+
 public class getSurroundingValuesWB {
 
 
