@@ -31,7 +31,13 @@ public class performMoveValid {
         boolean expected = !(next == 1);
         game.performMove(row, column);
         boolean result = board[column][row].isOccupied();
+        int expectedScore = 0;
+        if (!result){
+            expectedScore = 30;
+        }
         Assert.assertEquals(expected, result);
+        Assert.assertEquals(expectedScore, game.getScore());
+        game.restartGame();
     }
 
     @Test
@@ -44,5 +50,6 @@ public class performMoveValid {
         int result = board[column][row].getNumber();
 
         Assert.assertEquals(expected, result);
+        game.restartGame();
     }
 }

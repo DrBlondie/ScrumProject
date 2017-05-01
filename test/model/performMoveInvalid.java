@@ -1,5 +1,6 @@
 package model;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,6 +19,8 @@ public class performMoveInvalid {
         column = 9;
 
         game.performMove(column, row);
+        Assert.assertEquals(0, game.getScore());
+        game.restartGame();
     }
 
     @Test
@@ -26,6 +29,8 @@ public class performMoveInvalid {
         column = 9;
 
         game.performMove(column, row);
+        Assert.assertEquals(0, game.getScore());
+        game.restartGame();
     }
 
     @Test
@@ -34,6 +39,7 @@ public class performMoveInvalid {
         column = 8;
 
         game.performMove(column, row);
+        Assert.assertEquals(0, game.getScore());
+        game.restartGame();
     }
-
 }
