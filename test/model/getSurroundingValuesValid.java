@@ -28,6 +28,7 @@ public class getSurroundingValuesValid {
         result = game.getSurroundingValues(0,0);
 
         Assert.assertEquals(expected,result);
+        game.restartGame();
     }
 
     @Test
@@ -39,6 +40,7 @@ public class getSurroundingValuesValid {
         result= game.getSurroundingValues(NUMBER_OF_COLUMNS - 1 ,0);
 
         Assert.assertEquals(expected,result);
+        game.restartGame();
 
     }
 
@@ -51,6 +53,7 @@ public class getSurroundingValuesValid {
         result= game.getSurroundingValues(0 ,NUMBER_OF_ROWS - 1);
 
         Assert.assertEquals(expected,result);
+        game.restartGame();
     }
 
     @Test
@@ -62,6 +65,7 @@ public class getSurroundingValuesValid {
         result= game.getSurroundingValues(NUMBER_OF_COLUMNS - 1 ,NUMBER_OF_ROWS - 1);
 
         Assert.assertEquals(expected,result);
+        game.restartGame();
     }
 
     @Test
@@ -77,6 +81,7 @@ public class getSurroundingValuesValid {
         result = game.getSurroundingValues(5, 0);
 
         Assert.assertEquals(expected, result);
+        game.restartGame();
     }
 
     @Test
@@ -92,6 +97,7 @@ public class getSurroundingValuesValid {
         result = game.getSurroundingValues(5, NUMBER_OF_ROWS - 1);
 
         Assert.assertEquals(expected, result);
+        game.restartGame();
     }
 
     @Test
@@ -107,6 +113,7 @@ public class getSurroundingValuesValid {
         result = game.getSurroundingValues(0, 5);
 
         Assert.assertEquals(expected, result);
+        game.restartGame();
     }
 
 
@@ -123,6 +130,7 @@ public class getSurroundingValuesValid {
         result = game.getSurroundingValues(NUMBER_OF_COLUMNS - 1, 5);
 
         Assert.assertEquals(expected, result);
+        game.restartGame();
     }
 
     @Test
@@ -140,7 +148,7 @@ public class getSurroundingValuesValid {
         expected += board[row + 1][col + 1].getNumber();
 
         result = game.getSurroundingValues(5, 5);
-
+        game.restartGame();
     }
 
 }

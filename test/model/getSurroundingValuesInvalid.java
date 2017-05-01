@@ -5,9 +5,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * Created by levin on 4/28/17.
- */
 public class getSurroundingValuesInvalid {
 
     private int expected;
@@ -28,7 +25,7 @@ public class getSurroundingValuesInvalid {
         result = game.getSurroundingValues(-1,-1);
 
         Assert.assertEquals(expected,result);
-
+        game.restartGame();
 
     }
     @Test
@@ -37,7 +34,7 @@ public class getSurroundingValuesInvalid {
         result = game.getSurroundingValues(9,9);
 
         Assert.assertEquals(expected,result);
-
+        game.restartGame();
 
     }
 
@@ -47,7 +44,7 @@ public class getSurroundingValuesInvalid {
         result = game.getSurroundingValues(-1,9);
 
         Assert.assertEquals(expected,result);
-
+        game.restartGame();
 
     }
     @Test
@@ -55,7 +52,7 @@ public class getSurroundingValuesInvalid {
         result = game.getSurroundingValues(9,-1);
 
         Assert.assertEquals(expected,result);
-
+        game.restartGame();
 
     }
 }
