@@ -156,8 +156,8 @@ public abstract class Game extends Observable {
                     }
                 }
             }
-            updateGame();
             removeTileLeft--;
+            updateGame();
             return true;
         }
         return false;

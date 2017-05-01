@@ -50,7 +50,7 @@ import model.UntimedGame;
 public class BoardView extends JFrame implements Observer {
     private JLabel gameLabel = new JLabel("");
     private JLabel scoreTime = new JLabel("");
-    private JLabel removeSimilarTile = new JLabel("Remove Similar Tile: 1");
+    private JLabel removeSimilarTile = new JLabel("<html><style ='text-align: center'>Remove Similar<br>Tiles: 1</html>");
     private JPanel playField = new JPanel();
     private JPanel queueBox = new JPanel();
     private JTextField[][] gameBoard = new JTextField[9][9];
@@ -87,16 +87,20 @@ public class BoardView extends JFrame implements Observer {
         timed.addActionListener(new ItemClickListener("timed"));
         JMenuItem untimed = new JMenuItem("New Untimed Game");
         untimed.addActionListener(new ItemClickListener("untimed"));
+        game.add(untimed);
+        game.add(timed);
+        game.add(exit);
+        gameMenu.add(game);
+        JMenu highscores = new JMenu("Highscores");
+
         JMenuItem scoreBoardMenu = new JMenuItem("Top 10 Most Points");
         scoreBoardMenu.addActionListener(new ItemClickListener("topPoints"));
         JMenuItem timeBoardMenu = new JMenuItem("Top 10 Fastest Times");
         timeBoardMenu.addActionListener(new ItemClickListener("topTime"));
-        game.add(untimed);
-        game.add(timed);
-        game.add(scoreBoardMenu);
-        game.add(timeBoardMenu);
-        game.add(exit);
-        gameMenu.add(game);
+
+        highscores.add(scoreBoardMenu);
+        highscores.add(timeBoardMenu);
+        gameMenu.add(highscores);
         setJMenuBar(gameMenu);
         JPanel header = new JPanel();
         header.setBackground(defaultColor);
@@ -104,7 +108,7 @@ public class BoardView extends JFrame implements Observer {
         scoreTime.setFont(new Font("SansSerif", Font.BOLD, 16));
         gameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         //Empty JLabels for formatting using GridLayout
-        header.add(removeSimilarTile);
+        header.add(new JLabel());
         header.add(new JLabel());
         header.add(new JLabel());
         header.add(new JLabel());
@@ -125,13 +129,12 @@ public class BoardView extends JFrame implements Observer {
         add(boardPanel, BorderLayout.CENTER);
         setResizable(false);
         makeEngaging();
-
     }
 
     public void newGame(Boolean isTimed) {
         gameOver = false;
         rerollButton.setText("Reroll: 1");
-        removeSimilarTile.setText("Remove Similar Tile: 1");
+        removeSimilarTile.setText("<html><body style ='text-align: center'>Remove Similar<br>Tiles: 1</html>");
 
         if (isTimed) {
             currentBoard = TimedGame.getInstance();
@@ -180,6 +183,10 @@ public class BoardView extends JFrame implements Observer {
         queueBox.add(hintButton, c);
         hintButton.addActionListener(new ItemClickListener("hint"));
         c.gridy++;
+        c.gridheight = 2;
+        queueBox.add(removeSimilarTile, c);
+        c.gridheight = 1;
+        c.gridy+= 2;
         queueBox.add(rerollButton, c);
         c.gridy++;
         rerollButton.addActionListener(new ItemClickListener("reroll"));
@@ -189,6 +196,7 @@ public class BoardView extends JFrame implements Observer {
             c.gridy++;
             queueBox.add(queue[i], c);
         }
+
     }
 
 
@@ -280,7 +288,11 @@ public class BoardView extends JFrame implements Observer {
             Clip myClip = AudioSystem.getClip();
             AudioInputStream ais = AudioSystem.getAudioInputStream(temp);
             myClip.open(ais);
-            myClip.start();
+            if(fileName.equals("/resources/marioMusic.wav")){
+                myClip.loop(Clip.LOOP_CONTINUOUSLY);
+            }else{
+                myClip.start();
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Audio file not found!");
         }
@@ -410,7 +422,7 @@ public class BoardView extends JFrame implements Observer {
             }
             if (currentBoard.isOccupied(boardPosition.x, boardPosition.y) && currentBoard.removeCommonTiles(boardPosition.x, boardPosition.y)) {
                 setCommonColor(defaultColor);
-                removeSimilarTile.setText("Remove Similar Tile: 0");
+                removeSimilarTile.setText("<html><body style ='text-align: center'>Remove Similar<br>Tiles: 0</html>");
             } else if (currentBoard.checkMove(boardPosition.x, boardPosition.y)) {
                 changeTheme();
                 gameBoard[boardPosition.x][boardPosition.y].setBackground(defaultColor);

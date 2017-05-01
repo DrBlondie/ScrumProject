@@ -4,11 +4,10 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Scanner;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 
-public class ScoreBoard implements Observable {
+public class ScoreBoard extends Observable {
     private ArrayList<PlayerScore> playerHighScores;
     private ArrayList<PlayerScore> playerTimedScores;
     private DateTimeFormatter dtf;
@@ -192,7 +191,4 @@ public class ScoreBoard implements Observable {
     private void writeToFile(PlayerScore playerScore, PrintWriter writer) {
         writer.println(playerScore.getScore() + "," + playerScore.getName() + "," + dtf.format(playerScore.getDate()));
     }
-
-    public void removeListener(InvalidationListener listener) {}
-    public void addListener(InvalidationListener listener) {}
 }
