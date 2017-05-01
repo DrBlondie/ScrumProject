@@ -184,18 +184,6 @@ public abstract class Game extends Observable {
 
     public abstract void newGame();
 
-    public void seedGame(){
-        for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-            for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
-                board[i][j].emptyTile();
-            }
-        }
-        board[4][4].setOccupied(true);
-        board[4][4].setNumber(currentQueue.getNext());
-        updateGame();
-    }
-
-
 }
 
 
