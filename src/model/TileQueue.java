@@ -82,4 +82,5 @@ public class TileQueue extends Observable {
         return numberQueue.get(0);
     }
 
+    int getRemainingElements() { return numberQueue.size(); }
 }

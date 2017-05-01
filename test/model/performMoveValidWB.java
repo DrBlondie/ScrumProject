@@ -37,12 +37,21 @@ public class performMoveValidWB {
         board[column][row + 1].setNumber(0);
         board[column][row + 1].setOccupied(true);
         TileQueue queue = game.getQueue();
+        if(queue.getRemainingElements() == 0){
+            Assert.assertEquals(0, queue.getRemainingElements());
+            return;
+        }
         int next = queue.getNext();
 
         while(next == 1) {
             game.performMove(8,8);
             board[8][8].setNumber(0);
             board[8][8].setOccupied(false);
+
+            if(queue.getRemainingElements() == 0){
+                Assert.assertEquals(0, queue.getRemainingElements());
+                return;
+            }
             next = queue.getNext();
         }
         game.performMove(row, column);
@@ -59,12 +68,21 @@ public class performMoveValidWB {
 
         board[column + 1][row + 1].setNumber(1);
         TileQueue queue = game.getQueue();
+        if(queue.getRemainingElements() == 0){
+            Assert.assertEquals(0, queue.getRemainingElements());
+            return;
+        }
         int next = queue.getNext();
 
         while(next != 1) {
             game.performMove(8,8);
             board[8][8].setNumber(0);
             board[8][8].setOccupied(false);
+
+            if(queue.getRemainingElements() == 0){
+                Assert.assertEquals(0, queue.getRemainingElements());
+                return;
+            }
             next = queue.getNext();
         }
 
@@ -88,12 +106,20 @@ public class performMoveValidWB {
         board[column][row + 1].setNumber(0);
         board[column][row + 1].setOccupied(true);
         TileQueue queue = game.getQueue();
+        if(queue.getRemainingElements() == 0){
+            Assert.assertEquals(0, queue.getRemainingElements());
+            return;
+        }
         int next = queue.getNext();
 
         while(next != 1) {
             game.performMove(8,8);
             board[8][8].setNumber(0);
             board[8][8].setOccupied(false);
+            if(queue.getRemainingElements() == 0){
+                Assert.assertEquals(0, queue.getRemainingElements());
+                return;
+            }
             next = queue.getNext();
         }
 

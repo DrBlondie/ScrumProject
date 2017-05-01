@@ -85,7 +85,8 @@ public abstract class Game extends Observable {
 
 
     void performMove(int col, int row) {
-        if(col < 0 || col > 8 || row < 0 || row > 8 || board[col][row].isOccupied() ){
+        if(col < 0 || col > 8 || row < 0 || row > 8 || board[col][row].isOccupied() ||
+                currentQueue.getRemainingElements() == 0){
             return;
         }
         int removed = 0;
