@@ -33,7 +33,7 @@ public class ScoreBoard extends Observable {
 
     public boolean betterThanTop(int score, boolean isTimedScore) {
         if (!isTimedScore) {
-            if(playerHighScores.size() == 0){
+            if(playerHighScores.size() < MAX_SIZE){
                 return true;
             }
             for (PlayerScore highScores : playerHighScores) {
@@ -42,7 +42,7 @@ public class ScoreBoard extends Observable {
                 }
             }
         }else {
-            if(playerTimedScores.size() == 0){
+            if(playerTimedScores.size() < MAX_SIZE){
                 return true;
             }
             for (PlayerScore highScores : playerTimedScores) {
